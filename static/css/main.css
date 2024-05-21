@@ -76,11 +76,11 @@ header a:hover{
     color: #fff;
     border-radius: 5px;
     cursor: pointer;
-    transition: transform 0.5s; /* Animation de transition */
+    transition: transform 0.5s; 
 }
 
 .btn-discover:hover {
-    transform: translateY(-10px); /* Animation de translation vers le haut */
+    transform: translateY(-10px); 
 }
 
 .cocktail_card {
@@ -132,5 +132,15 @@ header a:hover{
     min-height: 50vh;
     max-height: 100vh;
     overflow-y: auto;
+}
+
+.login-logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: url('../images/bg.png '); 
+    background-size: cover;
+    background-position: center;
 }
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cokctail Genius - Login</title>
+    <title>Cokctail Genius - Signup</title>
     <link href="{{url_for('static', filename='css/main.css')}}" rel="stylesheet">
     
     
@@ -22,29 +22,30 @@
             <div class="col-lg-6 bg-light" style="height: 100vh;">
                 <div class="d-flex justify-content-center align-items-center h-100">
                     <form class="bg-light-warning border p-4 rounded" style="width: 80%;">
-                        <h2 class="mb-4">Connexion</h2>
+                        <h2 class="mb-4">Inscription</h2>
                         <div class="form-group">
-                            <label for="username">Nom d'utilisateur</label>
+                            <label for="username" class="mb-1">Nom</label>
                             <input type="text" class="form-control" id="username" placeholder="Entrez votre nom d'utilisateur">
                         </div>
                         <div class="form-group">
-                            <label for="password">Mot de passe</label>
+                            <label for="username" class="mb-1">Prenom</label>
+                            <input type="text" class="form-control" id="username" placeholder="Entrez votre nom d'utilisateur">
+                        </div>
+                        <div class="form-group">
+                            <label for="username" class="mb-1">Nom d'utilisateur</label>
+                            <input type="text" class="form-control" id="username" placeholder="Entrez votre nom d'utilisateur">
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="mb-1">Mot de passe</label>
                             <input type="password" class="form-control" id="password" placeholder="Entrez votre mot de passe">
                         </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="rememberMe">
-                                    <label class="form-check-label" for="rememberMe">Se souvenir de moi</label>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-6 text-right">
-                                <a href="#">Mot de passe oublié ?</a>
-                            </div>
+                        <div class="form-group">
+                            <label for="password" class="mb-1">Confirmez le mot de passe</label>
+                            <input type="password" class="form-control" id="password" placeholder="Entrez votre mot de passe">
                         </div>
-                        <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
+                        <button type="submit" class="btn btn-success btn-block">Se connecter</button>
                         <div class="text-center mt-3">
-                            Vous n'avez pas de compte ? <a href="/signup">S'inscrire</a>
+                            Vous aviez déjà un compte ? Connecter vous<a href="/login"> ici</a>
                         </div>
                     </form>
                 </div>

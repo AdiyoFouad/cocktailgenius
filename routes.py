@@ -13,6 +13,14 @@ main_blueprint = Blueprint('main', __name__)
 def index():
     return render_template('index.html')
 
+@main_blueprint.route('/login')
+def login():
+    return render_template('login.html')
+
+@main_blueprint.route('/signup')
+def signup():
+    return render_template('signup.html')
+
 @main_blueprint.route('/profil')
 def profil():
     return render_template('profil.html')
