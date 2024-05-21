@@ -13,6 +13,10 @@ main_blueprint = Blueprint('main', __name__)
 def index():
     return render_template('index.html')
 
+@main_blueprint.route('/profil')
+def profil():
+    return render_template('profil.html')
+
 @main_blueprint.route('/submit_recipe')
 def submit_recipe():
     return render_template('submit_recipe.html', title= "Submit Recipe")

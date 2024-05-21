@@ -10,11 +10,11 @@
                 <div class="row">
                     <div class="form-group col-md-7">
                         <label for="nom" class="fw-semibold mb-0">Nom du Cocktail</label>
-                        <input type="text" class="form-control" name="nom" required>
+                        <input type="text" class="form-control rounded-2" name="nom" required>
                     </div>
                     <div class="form-group col">
                         <label for="difficulte" class="fw-semibold mb-0">Difficulté</label>
-                        <select class="form-select" name="difficulte" required>
+                        <select class="form-select rounded-2" name="difficulte" required>
                             <option value="Facile">Facile</option>
                             <option value="Intermédiaire">Intermédiaire</option>
                             <option value="Difficile">Difficile</option>
@@ -26,8 +26,8 @@
                     <div id="ingredients">
                         <div class="ingredient">
                             <div class="input-group">
-                                <input type="text" class="form-control col-6 me-2" name="ingredients[]" placeholder="Nom de l'ingrédient" required>
-                                <input type="text" class="form-control col-5" name="quantites[]" placeholder="Quantité" required>
+                                <input type="text" class="form-control rounded-2 col-6 me-2" name="ingredients[]" placeholder="Nom de l'ingrédient" required>
+                                <input type="text" class="form-control rounded-2 col-5" name="quantites[]" placeholder="Quantité" required>
                             </div>
                         </div>
                     </div>
@@ -37,14 +37,14 @@
                     <label  class="fw-semibold mb-0">Étapes</label>
                     <div id="etapes">
                         <div class="etape">
-                            <textarea class="form-control" name="etapes[]" required></textarea>
+                            <textarea class="form-control rounded-2" name="etapes[]" required></textarea>
                         </div>
                     </div>
                     <div class="d-flex justify-content-center"><button type="button" class="btn btn-primary mt-2" id="addEtape">Ajouter une étape</button></div>
                 </div>
                 <div class="form-group">
                     <label for="image" class="fw-semibold mb-0">Image du Cocktail</label>
-                    <input type="file" class="form-control" name="image" required accept="image/*">
+                    <input type="file" class="form-control rounded-2" name="image" required accept="image/*">
                 </div>
 
                 <input type="hidden" id="ingredientsConcatenated" name="ingredients">
