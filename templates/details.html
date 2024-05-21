@@ -1,0 +1,128 @@
+{% extends 'layouts.html' %} 
+
+
+{% block content%}
+
+
+<div class="container-fluid ps-4">
+
+    <div class="mt-3 row">
+        <div class="col-md-8   grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <div class="mb-0">
+                        <h3>Cocktail : {{cocktail}}</h3>
+                        <div class="logo_b d-flex align-items-center justify-content-center"><i class="fas fa-martini-glass text-black"></i></div>
+                    </div>
+                    <hr class="mt-0">
+
+                    
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div class="justify-content-center details_cocktail_img rounded overflow-hidden ">
+                            <img src="{{url_for('static', filename='images/bg.png')}}"  alt="CocktailGenius Logo" width="100%" >
+                        </div>
+                        <div>
+                            <p><i class="fas fa-martini-glass fs-3"></i> Facile</p><p class="d-flex align-items-center">
+                                <i class="fas fa-star fs-3 text-warning"></i>
+                                <i class="fas fa-star  fs-3 text-warning"></i>
+                                <i class="fas fa-star  fs-3 text-warning"></i>
+                                <i class="fas fa-star-half-alt  fs-3 text-warning"></i>
+                                <i class="far fa-star  fs-3 text-warning me"></i>
+                            </p>
+                            <span class=""><i class="fas fa-user-pen fs-1"></i> Publié par <a href="" class="text-warning fw-semibold">O. Joshua</a></span>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <h4>Ingrédients <small class="fs-3">(Pour 5 personnes)</small></h4>
+                    <table class="w-100 ms-2">
+                        <tr>
+                            <td>Sirop de sucre de canne</td>
+                            <td>75 cl</td>
+                        </tr>
+                        <tr>
+                            <td>Fruit de la passion (maracuja)</td>
+                            <td>25 </td>
+                        </tr>
+                        <tr>
+                            <td>Rhum blanc</td>
+                            <td>5 l</td>
+                        </tr>
+                    </table>
+                    <hr>
+
+                    <h4>Préparation</h4>
+                    <h6>Etape 1</h6>
+                    <p>Réalisez la recette "Punch passion" directement en bouteilles.</p>
+                    <h6>Etape 2</h6>
+                    <p>Faire macérer pendant 15 jours la pulpe des fruits de la passion dans le rhum et le sirop de sucre de canne. Filtrer et mettre en bouteilles.</p>
+                    <h6>Etape 3</h6>
+                    <p>Servir dans un verre de type "".</p>
+                    <hr>
+
+                    <div class="bg-light rounded-5 text-center p-1 ">
+                        <p class="fw-semibold fs-5  mb-1">Noter cette recette</p>
+                        <p class="d-flex align-items-center justify-content-center mt-0">
+                            <i class="fas fa-star text-warning me-1 cursor-pointer" style="font-size: 25px;"></i>
+                            <i class="fas fa-star text-warning me-1 cursor-pointer" style="font-size: 25px;"></i>
+                            <i class="fas fa-star text-warning me-1 cursor-pointer" style="font-size: 25px;"></i>
+                            <i class="fas fa-star-half-alt text-warning me-1 cursor-pointer" style="font-size: 25px;"></i>
+                            <i class="far fa-star text-warning cursor-pointer" style="font-size: 25px;"></i>
+                        </p>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+        <div class="col  grid-margin stretch-card">
+            <div class="card details_cocktail_cmt">
+                <div class="card-body">
+                    <h5>Commentaires des utilisateurs</h5>
+                    <hr>
+                    <div class="row d-flex justify-content-center align-items-ceter">
+                        <i class="col-1 rounded-circle bg-primary ti ti-user text-white m-2 me-0 mb-4 d-flex justify-content-center align-items-center" style="width: 30px; height:30px;"></i>
+                        <div class="col">
+                            <p class="fw-semibold mb-0">Magengo Duarte</p>
+                            <p class="mb-0 fs-3">c'est le meilleur cocktail qui puisse existé</p>
+                            <p class="fs-2 mt-0">20 mars 2024</p>
+                        </div>
+                    </div>
+                    <hr class="mt-0">
+                    <div class="row d-flex justify-content-center align-items-ceter">
+                        <i class="col-1 rounded-circle bg-primary ti ti-user text-white m-2 me-0 mb-4 d-flex justify-content-center align-items-center" style="width: 30px; height:30px;"></i>
+                        <div class="col">
+                            <p class="fw-semibold mb-0">Magengo Duarte</p>
+                            <p class="mb-0 fs-3">c'est le meilleur cocktail qui puisse existé</p>
+                            <p class="fs-2 mt-0">20 mars 2024</p>
+                        </div>
+                    </div>
+                    <hr class="mt-0">
+                    <div class="row d-flex justify-content-center align-items-ceter">
+                        <i class="col-1 rounded-circle bg-primary ti ti-user text-white m-2 me-0 mb-4 d-flex justify-content-center align-items-center" style="width: 30px; height:30px;"></i>
+                        <div class="col">
+                            <p class="fw-semibold mb-0">Magengo Duarte</p>
+                            <p class="mb-0 fs-3">c'est le meilleur cocktail qui puisse existé</p>
+                            <p class="fs-2 mt-0">20 mars 2024</p>
+                        </div>
+                    </div>
+                    <hr class="mt-0">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+    
+    
+</div>
+
+
+{%endblock%}
+
+

@@ -1,0 +1,60 @@
+{% extends 'layouts.html' %} 
+
+
+{% block content%}
+
+
+<div class="container-fluid ps-4">
+
+    <div class=" mt-3">
+        <h4 class="mt-4">Nos cocktails du moment</h4>
+        <div class="input-group w-50 m-auto ">
+            <input type="text" placeholder="Rechercher : ingrédients, recettes, ..." class="form-control mt-3">
+            <div class="input-group-append mt-3">
+                <button class="btn btn-success pt-2 pb-2 rounded-right" type="button" style="height: 38px; width: 80px;" >
+                  <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+        <div class=" container-fluid row mt-5 justify-content-center align-items-center">
+            <div class="col-3 grid-margin stretch-card">
+                <div class="cocktail_card card navlink rounded-4 p-0 overflow-hidden">
+                    <div class="card-body p-0">
+                        <div class="logo d-flex align-items-center justify-content-center"><i class="fas fa-martini-glass text-white"></i></div>
+                        <a href="{{url_for('cocktail.details_cocktail', cocktail_id=1)}}">
+                            <div class="rounded-4 overflow-hidden" >
+                                <img src="{{url_for('static', filename='images/bg.png')}}"  alt="CocktailGenius Logo"  >
+                            </div>
+                        </a>
+                        <h1 class="card-title mt-3 text-center">Americano</h1>
+                        <div class="d-flex justify-content-between  pe-3 ps-3">
+                            <p><i class="fas fa-martini-glass fs-3"></i> Facile</p>
+                            <small class=""><i class="fas fa-user-pen fs-1"></i> Publié par <a href="" class="text-warning fw-semibold">O. Joshua</a></small>
+                        </div>
+                        <div class="d-flex justify-content-between pe-3 ps-3">
+                            
+                            <p class="d-flex align-items-center">
+                                <i class="fas fa-star fs-3 text-warning"></i>
+                                <i class="fas fa-star  fs-3 text-warning"></i>
+                                <i class="fas fa-star  fs-3 text-warning"></i>
+                                <i class="fas fa-star-half-alt  fs-3 text-warning"></i>
+                                <i class="far fa-star  fs-3 text-warning me"></i>
+                                <span class="ms-1"> 25 avis</span>
+                            </p>
+                            <a href="cocktail/2" class="fs-2 mt-1 text-success"><i class="fas fa-eye"></i> Voir details</a>
+                        </div>
+                    </div>
+    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    
+</div>
+
+
+{%endblock%}
+
+

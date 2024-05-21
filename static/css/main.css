@@ -1,0 +1,136 @@
+
+@import url('fontawesome.css');
+@import url('bootstrap.min.css');
+
+header a {
+    color: white;
+    transition: transform 0.3s ease;
+    display: inline-block;
+    box-shadow: inset;
+}
+header {    
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+header a:hover{
+    color:#0fb253;
+    text-decoration: none;
+    transform: scale(1.1);
+}
+
+.welcome-section {
+    /* Définir l'image de fond */
+    background-image: url('../images/bg.png ');
+    /* Assurez-vous que l'image de fond est couvrante */
+    background-size: cover;
+    /* Centrer l'image de fond */
+    background-position: center;
+    /* Mettre une hauteur égale à la fenêtre pour couvrir tout l'écran */
+    height: 100vh;
+    /* Activer le flou */
+    /* Overlay noir avec opacité */
+    position: relative;
+    z-index: 1;
+}
+
+.overlay {
+    /* Overlay noir */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Position absolue pour couvrir tout le parent */
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    /* Centrer le contenu */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Z-index supérieur à l'image de fond */
+    z-index: 2;
+}
+
+.welcome-message {
+    /* Style du message de bienvenue */
+    position: absolute;
+    top: 20%;
+    text-align: center;
+    font-size: 24px;
+
+}
+
+.welcome-message h1{
+    font-size: 50px;
+
+}
+
+.btn-discover {
+    margin-top: 50px;
+    padding: 30px 30px;
+    font-size: 20px;
+    height: 40px;
+    border: none;
+    background-color: #ffc107;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.5s; /* Animation de transition */
+}
+
+.btn-discover:hover {
+    transform: translateY(-10px); /* Animation de translation vers le haut */
+}
+
+.cocktail_card {
+    transition: transform 0.3s;
+}
+.cocktail_card:hover {
+    transform: translateY(-10px);
+}
+
+.cocktail_card .logo{
+    position: absolute;
+    top: 5%;
+    right: 5%;
+    border: solid #fff 1px;
+    height: 50px;
+    width: 50px;
+    border-radius: 100%;
+    text-align: center;
+    background-color: #ffffff46;
+}
+
+ .logo_b{
+    position: absolute;
+    top: 15px;
+    right: 5%;
+    border: solid #000000 1px;
+    height: 40px;
+    width: 40px;
+    border-radius: 100%;
+    text-align: center;
+    background-color: #00000018;
+}
+
+
+.cocktail_card img{
+    width:auto;
+    height: 250px;
+}
+
+
+.details_cocktail_img{
+    text-align: center;
+    width: 50%;
+    min-width: 300px;
+}
+
+
+.details_cocktail_cmt{
+    min-height: 50vh;
+    max-height: 100vh;
+    overflow-y: auto;
+}
+

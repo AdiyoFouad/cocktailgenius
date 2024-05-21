@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cokctail Genius - {{title}}</title>
+    <link href="{{url_for('static', filename='css/main.css')}}" rel="stylesheet">
+</head>
+<body>
+    <header class="pb-0 card bg-warning pt-0 navbar navbar-expand-sm navbar-light justify-content-between align-items-center fixed-top">
+        <div class="container-fluid p-0 d-flex ">
+            <a class="navbar-brand " href="/"><img src="{{url_for('static', filename='images/logos/logo.png')}}" alt="CocktailGenius Logo" height="50"></a>
+    
+            <div class="d-flex align-items-center justify-content-end">
+                <div>    
+                    <a class="fw-semibold me-2" href="/cocktails"> <i class=" "></i> Cocktails</a>
+                    <a class="fw-semibold me-2" href="/submit_recipe"> <i class=" "></i> Soumettre une recette</a>
+                    <a class="fw-semibold me-2" href=""> <i class=" "></i> Profil</a>
+                  </div>
+                  <div class="input-group me-1 "  style="width: 280px;">
+                      <input type="text" class="form-control" placeholder="Rechercher une recette" >
+                      <div class="input-group-append">
+                        <button class="btn btn-primary pt-2 pb-2 rounded-right" type="button" style="height: 37px;" >
+                          <i class="ti ti-search"></i>
+                        </button>
+                      </div>
+                  </div>
+                  <div class="">
+                    <a class="btn btn-light" href="login.html" > <i class="ti ti-login fs-5"></i> </a>
+                    <a class="btn btn-light" href="signup.html"> <i class="ti ti-user-plus fs-4"></i> </a>
+                  </div>
+            </div>
+        </div>
+    </header>
+
+    <div style="height: 40px;">
+    </div>
+
+    <div class="bg-light-succss pt-4" style="min-height: calc(100vh - 43px);">
+        {% block content %}
+        
+        {% endblock%}
+    </div>
+      
+        
+
+</body>
+
+<script src="{{url_for('static', filename='js/jquery.js')}}"></script>
+<script src="{{url_for('static', filename='js/bootstrap.js')}}"></script>
+</html>

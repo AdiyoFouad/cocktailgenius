@@ -1,0 +1,53 @@
+{% extends 'layouts.html' %} 
+
+
+{% block content%}
+
+
+<div class="container-fluid p-2 ">
+    <div class="card col-md-7 m-auto">
+        <div class="card-body">
+            <form action="" method="post">
+                <h4 class="text-center">Submit a cocktail's recipe</h4>
+                <hr class="mt-1">
+                <div class="form-group">
+                    <label for="name">Cocktail's Name</label>
+                    <input type="text" class="form-control" name="name"  id="" required="1">
+                </div>
+                <div class="form-group">
+                    <label for="level">Level</label>
+                    <select class="form-select" name="level" id="" placeholder="kk">
+                        <option value="Facile">Facile</option>
+                        <option value="Intermédiaire">Intermédiaire</option>
+                        <option value="Difficile">Difficile</option>
+                    </select>
+                </div>
+                <div class="row">
+                    <div class="form-group col-6">
+                        <label for="name">Nouveau Ingredient</label>
+                        <input type="text" class="form-control" name="name"  id="" required="1">
+                    </div>
+                    <div class="form-group col-4">
+                        <label for="name">Quantity</label>
+                        <input type="text" class="form-control" name="name"  id="" required="1">
+                    </div>
+                    <div class="col d-flex align-items-center">
+                        <button class="btn btn-primary" type="button">Add</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="name"></label>
+                    <input type="text" class="form-control" name="name"  id="" required="1">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Update Data</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{%endblock%}
+
+
