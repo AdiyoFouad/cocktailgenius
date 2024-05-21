@@ -10,8 +10,12 @@ class User(db.Model):
     firstname = db.Column(db.String(50), nullable=False)
     lastname = db.Column(db.String(50), nullable=False)
     password = db.Column(db.String(60), nullable=False)
-    is_admin = db.Column(db.Boolean, default=False, nullable=False)  
+    is_admin = db.Column(db.Boolean, default=False, nullable=False) 
+    is_active = db.Column(db.Boolean, default=False, nullable=False)  
     profile_image = db.Column(db.LargeBinary, nullable=True)
+
+    def get_id(self):
+        return str(self.id)
 
 class Recipe(db.Model):
     __tablename__ = 'recipes'
