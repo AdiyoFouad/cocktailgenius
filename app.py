@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from flask_jwt_extended import JWTManager
-from routes import student_blueprint, cocktail_blueprint
+from routes import student_blueprint, cocktail_blueprint, main_blueprint
 from database import db
 
 app = Flask(__name__)
@@ -13,19 +13,9 @@ jwt = JWTManager(app)
 
 
 
+app.register_blueprint(main_blueprint)
 app.register_blueprint(student_blueprint)
 app.register_blueprint(cocktail_blueprint)
-
-
-@app.route('/')
-@app.route('/home')
-def index():
-    return render_template('index.html')
-
-
-@app.route('/submit_recipe')
-def submit_recipe():
-    return render_template('submit_recipe.html', title= "Submit Recipe")
 
 
 

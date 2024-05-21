@@ -1,53 +1,128 @@
 {% extends 'layouts.html' %} 
 
-
 {% block content%}
-
-
-<div class="container-fluid p-2 ">
+<div class="container-fluid p-2">
     <div class="card col-md-7 m-auto">
         <div class="card-body">
-            <form action="" method="post">
-                <h4 class="text-center">Submit a cocktail's recipe</h4>
+            <form action="{{url_for('cocktail.new_cocktail')}}" id="cocktailForm" method="post">
+                <h4 class="text-center">Soumettre une nouvelle recette de cocktail</h4>
                 <hr class="mt-1">
-                <div class="form-group">
-                    <label for="name">Cocktail's Name</label>
-                    <input type="text" class="form-control" name="name"  id="" required="1">
-                </div>
-                <div class="form-group">
-                    <label for="level">Level</label>
-                    <select class="form-select" name="level" id="" placeholder="kk">
-                        <option value="Facile">Facile</option>
-                        <option value="Intermédiaire">Intermédiaire</option>
-                        <option value="Difficile">Difficile</option>
-                    </select>
-                </div>
                 <div class="row">
-                    <div class="form-group col-6">
-                        <label for="name">Nouveau Ingredient</label>
-                        <input type="text" class="form-control" name="name"  id="" required="1">
+                    <div class="form-group col-md-7">
+                        <label for="nom" class="fw-semibold mb-0">Nom du Cocktail</label>
+                        <input type="text" class="form-control" name="nom" required>
                     </div>
-                    <div class="form-group col-4">
-                        <label for="name">Quantity</label>
-                        <input type="text" class="form-control" name="name"  id="" required="1">
-                    </div>
-                    <div class="col d-flex align-items-center">
-                        <button class="btn btn-primary" type="button">Add</button>
+                    <div class="form-group col">
+                        <label for="difficulte" class="fw-semibold mb-0">Difficulté</label>
+                        <select class="form-select" name="difficulte" required>
+                            <option value="Facile">Facile</option>
+                            <option value="Intermédiaire">Intermédiaire</option>
+                            <option value="Difficile">Difficile</option>
+                        </select>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="name"></label>
-                    <input type="text" class="form-control" name="name"  id="" required="1">
+                    <label class="fw-semibold mb-0">Ingrédients</label>
+                    <div id="ingredients">
+                        <div class="ingredient">
+                            <div class="input-group">
+                                <input type="text" class="form-control col-6 me-2" name="ingredients[]" placeholder="Nom de l'ingrédient" required>
+                                <input type="text" class="form-control col-5" name="quantites[]" placeholder="Quantité" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center"><button type="button" class="btn btn-primary mt-1" id="addIngredient">Ajouter un ingrédient</button></div>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Update Data</button>
+                    <label  class="fw-semibold mb-0">Étapes</label>
+                    <div id="etapes">
+                        <div class="etape">
+                            <textarea class="form-control" name="etapes[]" required></textarea>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center"><button type="button" class="btn btn-primary mt-2" id="addEtape">Ajouter une étape</button></div>
+                </div>
+                <div class="form-group">
+                    <label for="image" class="fw-semibold mb-0">Image du Cocktail</label>
+                    <input type="file" class="form-control" name="image" required accept="image/*">
+                </div>
+
+                <input type="hidden" id="ingredientsConcatenated" name="ingredients">
+                <input type="hidden" id="etapesConcatenated" name="etapes">
+                <div class="form-group">
+                    <button type="button" onclick="concatAndSubmit()" class="btn btn-success col-10 offset-1">Créer la recette</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
+<script>
+    // JavaScript pour ajouter et supprimer des champs d'ingrédients et d'étapes
+    document.getElementById("addIngredient").addEventListener("click", function() {
+        var ingredients = document.getElementById("ingredients");
+        var ingredient = document.createElement("div");
+        ingredient.classList.add("ingredient");
+        ingredient.innerHTML = `<div class="input-group mt-1">
+                                    <input type="text" class="form-control col-6 me-2" name="ingredients[]" placeholder="Nom de l'ingrédient" required>
+                                    <input type="text" class="form-control col-5 me-2" name="quantites[]" placeholder="Quantité" required>
+                                </div>`;
+        ingredients.appendChild(ingredient);
+        if (ingredients.children.length > 1) {
+            var removeButton = document.createElement("button");
+            removeButton.type = "button";
+            removeButton.classList.add("btn", "btn-danger", "remove", "fw-bolder", "rounded");
+            removeButton.textContent = "-";
+            ingredient.querySelector(".input-group").appendChild(removeButton);
+            removeButton.addEventListener("click", function() {
+                ingredient.remove();
+            });
+        }
+    });
 
-{%endblock%}
+    document.getElementById("addEtape").addEventListener("click", function() {
+        var etapes = document.getElementById("etapes");
+        var etape = document.createElement("div");
+        etape.classList.add("etape");
+        etape.innerHTML = `<div class="input-group d-flex justify-content-between align-items-center mt-1"><textarea class="form-control col-11" name="etapes[]" required></textarea></div>`;
+        etapes.appendChild(etape);
+        if (etapes.children.length > 1) {
+            var removeButton = document.createElement("button");
+            removeButton.type = "button";
+            removeButton.classList.add("btn", "btn-danger", "remove", "fw-bolder", "rounded");
+            removeButton.textContent = "-";
+            etape.querySelector(".input-group").appendChild(removeButton);
+            removeButton.addEventListener("click", function() {
+                etape.remove();
+            });
+        }
+    });
 
 
+    function concatAndSubmit() {
+        var ingredients = document.getElementsByName("ingredients[]");
+        var quantites = document.getElementsByName("quantites[]");
+        var etapes = document.getElementsByName("etapes[]");
+
+        var ingredientsConcatenated = "";
+        var etapesConcatenated = "";
+
+        // Concaténer les valeurs des champs d'ingrédients
+        for (var i = 0; i < ingredients.length; i++) {
+            ingredientsConcatenated += ingredients[i].value + " : " + quantites[i].value + "\n";
+        }
+
+        // Concaténer les valeurs des champs d'étapes
+        for (var j = 0; j < etapes.length; j++) {
+            etapesConcatenated += etapes[j].value + "\n";
+        }
+
+        // Stocker les valeurs concaténées dans des champs cachés
+        document.getElementById("ingredientsConcatenated").value = ingredientsConcatenated;
+        document.getElementById("etapesConcatenated").value = etapesConcatenated;
+
+        // Soumettre le formulaire
+        document.getElementById("cocktailForm").submit();
+    }
+</script>
+{% endblock %}
