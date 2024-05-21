@@ -21,13 +21,11 @@ class Recipe(db.Model):
     instructions = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user = db.relationship('User', backref=db.backref('recipes', lazy=True))
-    # D'autres champs pour les informations de recette comme la catégorie, le temps de préparation, etc.
 
 class Ingredient(db.Model):
     __tablename__ = 'ingredients'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False, unique=True)
-    # D'autres champs pour les informations d'ingrédient comme la catégorie, les propriétés, etc.
 
 class RecipeIngredient(db.Model):
     __tablename__ = 'recipe_ingredients'
@@ -35,7 +33,6 @@ class RecipeIngredient(db.Model):
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), nullable=False)
     ingredient_id = db.Column(db.Integer, db.ForeignKey('ingredients.id'), nullable=False)
     quantity = db.Column(db.String(20), nullable=False)
-    # D'autres champs comme unité de mesure, etc.
 
 class Comment(db.Model):
     __tablename__ = 'comments'
@@ -45,7 +42,6 @@ class Comment(db.Model):
     user = db.relationship('User', backref=db.backref('comments', lazy=True))
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), nullable=False)
     recipe = db.relationship('Recipe', backref=db.backref('comments', lazy=True))
-    # D'autres champs comme la date du commentaire, etc.
 
 class Rating(db.Model):
     __tablename__ = 'ratings'
@@ -55,6 +51,5 @@ class Rating(db.Model):
     user = db.relationship('User', backref=db.backref('ratings', lazy=True))
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), nullable=False)
     recipe = db.relationship('Recipe', backref=db.backref('ratings', lazy=True))
-    # D'autres champs comme la date du vote, etc.
 
 
