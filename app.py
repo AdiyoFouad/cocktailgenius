@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 from flask_jwt_extended import JWTManager
-from routes import  cocktail_blueprint, main_blueprint
+from routes import  cocktail_blueprint, main_blueprint, user_blueprint
 from database import db
 
 app = Flask(__name__)
@@ -15,6 +15,7 @@ jwt = JWTManager(app)
 
 app.register_blueprint(main_blueprint)
 app.register_blueprint(cocktail_blueprint)
+app.register_blueprint(user_blueprint)
 
 
 

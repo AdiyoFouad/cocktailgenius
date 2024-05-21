@@ -53,6 +53,23 @@ def new_cocktail():
 
 
 
+user_blueprint = Blueprint('user', __name__)
+@user_blueprint.route('/new_user', methods = ['POST'])
+def new_user():
+    if (request.method == 'POST'):
+        username = request.form['username']
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        email = request.form['email']
+        password = request.form['password']
+
+        n_user  = User(username=username, firstname=first_name, lastname=last_name, email = email, password=password)
+ 
+        db.session.add(n_user)
+        db.session.commit()
+        flash("Your account has been successfully created")
+        return jsonify(request.form)
+
 
 
 
