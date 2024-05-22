@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash
+from flask import Blueprint, render_template, request, session, jsonify, redirect, url_for, flash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user
 from models import User
 from database import db
@@ -16,22 +16,22 @@ def index():
 
 @main_blueprint.route('/login')
 def login():
+    session['next'] = request.args.get('next')
     return render_template('login.html')
 
 @main_blueprint.route('/signup')
 def signup():
     return render_template('signup.html')
 
-@main_blueprint.route('/profil')
+@main_blueprint.route('/profil', methods = ['POST', 'GET'])
 @login_required
 def profil():
     return render_template('profil.html')
 
 @main_blueprint.route('/submit_recipe')
+@login_required
 def submit_recipe():
     return render_template('submit_recipe.html', title= "Submit Recipe")
-
-
 
 
 cocktail_blueprint = Blueprint('cocktail', __name__)
@@ -73,25 +73,32 @@ def new_user():
         return jsonify(request.form)
 
 
-@user_blueprint.route('/login_user', methods = ['POST'])
+@user_blueprint.route('/user_login', methods=['POST', 'GET'])
 def user_login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        
+        remember = True if request.form.get('remember') else False         
         user = User.query.filter_by(username=username).first()
         if user and user.password == password:
-            login_user(user)
-            return jsonify({'message': 'Login successful!'})
+            login_user(user, remember=True)
+            if session.get('next'):
+                next_url = session.get('next')
+                session.pop('next')  # Nettoyer la session après utilisation
+                return redirect(next_url or url_for('main.index'))
+            else:
+                return redirect('/')
         else:
             return jsonify({'message': 'Invalid credentials.'}), 401
 
-
-@user_blueprint.route('/logout_user')
+@user_blueprint.route('/logout')
 @login_required
-def logout_user():
+def logout():
     logout_user()
+    session.pop('next', None)  # Nettoyer la session après la déconnexion
     return redirect(url_for('main.index'))
+
+
 
 
 
