@@ -31,7 +31,7 @@ def user_login():
         remember = True if request.form.get('remember') else False         
         user = User.query.filter_by(username=username).first()
         if user and user.password == password:
-            login_user(user, remember=True)
+            login_user(user, remember=remember)
             if session.get('next'):
                 next_url = session.get('next')
                 session.pop('next')
@@ -39,7 +39,15 @@ def user_login():
             else:
                 return render_template('cocktails.html', title="Cocktails")
         else:
-            return jsonify({'message': 'Invalid credentials.'}), 401
+            flash('Invalid username or password', 'error')
+            if session.get('next'):
+                next_url = session.get('next')
+                return redirect(url_for('user.user_login', next=next_url))
+            else:
+                return redirect(url_for('user.user_login'))
+    else:
+        return render_template('login.html')
+            
 
 @user_blueprint.route('/logout')
 @login_required
