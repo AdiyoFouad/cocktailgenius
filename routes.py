@@ -1,9 +1,54 @@
 from flask import Blueprint, render_template, request, session, jsonify, redirect, url_for, flash
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from models import User
 from database import db
 
-student_blueprint = Blueprint('student', __name__)
+
+
+user_blueprint = Blueprint('user', __name__)
+@user_blueprint.route('/new_user', methods = ['POST'])
+def new_user():
+    if (request.method == 'POST'):
+        username = request.form['username']
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        email = request.form['email']
+        password = request.form['password']
+
+        n_user  = User(username=username, firstname=first_name, lastname=last_name, email = email, password=password)
+ 
+        db.session.add(n_user)
+        db.session.commit()
+        flash("Your account has been successfully created")
+        return render_template(url_for('/user_login'), title = "Login")
+
+
+@user_blueprint.route('/user_login', methods=['POST', 'GET'])
+def user_login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        remember = True if request.form.get('remember') else False         
+        user = User.query.filter_by(username=username).first()
+        if user and user.password == password:
+            login_user(user, remember=True)
+            if session.get('next'):
+                next_url = session.get('next')
+                session.pop('next')
+                return redirect(next_url or url_for('main.index'))
+            else:
+                return render_template('cocktails.html', title="Cocktails")
+        else:
+            return jsonify({'message': 'Invalid credentials.'}), 401
+
+@user_blueprint.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    session.pop('next', None)
+    return redirect(url_for('main.index'))
+
+
 
 
 
@@ -26,7 +71,7 @@ def signup():
 @main_blueprint.route('/profil', methods = ['POST', 'GET'])
 @login_required
 def profil():
-    return render_template('profil.html')
+    return render_template('profil.html', title= "Profile")
 
 @main_blueprint.route('/submit_recipe')
 @login_required
@@ -52,51 +97,6 @@ def new_cocktail():
         return jsonify(request.form), 201
 
         """return redirect(url_for('index'))"""
-
-
-
-user_blueprint = Blueprint('user', __name__)
-@user_blueprint.route('/new_user', methods = ['POST'])
-def new_user():
-    if (request.method == 'POST'):
-        username = request.form['username']
-        first_name = request.form['first_name']
-        last_name = request.form['last_name']
-        email = request.form['email']
-        password = request.form['password']
-
-        n_user  = User(username=username, firstname=first_name, lastname=last_name, email = email, password=password)
- 
-        db.session.add(n_user)
-        db.session.commit()
-        flash("Your account has been successfully created")
-        return jsonify(request.form)
-
-
-@user_blueprint.route('/user_login', methods=['POST', 'GET'])
-def user_login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        remember = True if request.form.get('remember') else False         
-        user = User.query.filter_by(username=username).first()
-        if user and user.password == password:
-            login_user(user, remember=True)
-            if session.get('next'):
-                next_url = session.get('next')
-                session.pop('next')  # Nettoyer la session après utilisation
-                return redirect(next_url or url_for('main.index'))
-            else:
-                return redirect('/')
-        else:
-            return jsonify({'message': 'Invalid credentials.'}), 401
-
-@user_blueprint.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    session.pop('next', None)  # Nettoyer la session après la déconnexion
-    return redirect(url_for('main.index'))
 
 
 
