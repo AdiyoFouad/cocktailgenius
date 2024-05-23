@@ -1,12 +1,39 @@
 from flask import Blueprint, render_template, request, session, jsonify, redirect, url_for, flash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-from models import User
+from models import User, Recipe, Ingredient, RecipeIngredient, Step
 from database import db
 from werkzeug.utils import secure_filename
 import os
 
 UPLOAD_FOLDER = 'static/images/users_avatar'
+UPLOAD_RECIPE_FOLDER = 'static/images/recipes_images'
 
+
+main_blueprint = Blueprint('main', __name__)
+
+@main_blueprint.route('/')
+@main_blueprint.route('/home')
+def index():
+    return render_template('index.html')
+
+@main_blueprint.route('/login')
+def login():
+    session['next'] = request.args.get('next')
+    return render_template('login.html')
+
+@main_blueprint.route('/signup')
+def signup():
+    return render_template('signup.html')
+
+@main_blueprint.route('/profil', methods = ['POST', 'GET'])
+@login_required
+def profil():
+    return render_template('profil.html', title= "Profile")
+
+@main_blueprint.route('/submit_recipe')
+@login_required
+def submit_recipe():
+    return render_template('submit_recipe.html', title= "Submit Recipe")
 
 
 user_blueprint = Blueprint('user', __name__)
@@ -79,33 +106,6 @@ def logout():
 
 
 
-main_blueprint = Blueprint('main', __name__)
-
-@main_blueprint.route('/')
-@main_blueprint.route('/home')
-def index():
-    return render_template('index.html')
-
-@main_blueprint.route('/login')
-def login():
-    session['next'] = request.args.get('next')
-    return render_template('login.html')
-
-@main_blueprint.route('/signup')
-def signup():
-    return render_template('signup.html')
-
-@main_blueprint.route('/profil', methods = ['POST', 'GET'])
-@login_required
-def profil():
-    return render_template('profil.html', title= "Profile")
-
-@main_blueprint.route('/submit_recipe')
-@login_required
-def submit_recipe():
-    return render_template('submit_recipe.html', title= "Submit Recipe")
-
-
 cocktail_blueprint = Blueprint('cocktail', __name__)
 
 @cocktail_blueprint.route('/cocktails')
@@ -119,14 +119,51 @@ def details_cocktail(cocktail_id):
 @cocktail_blueprint.route('/new_cocktail', methods=['POST'])
 def new_cocktail():
     if request.method == "POST":
-        flash("Soumission de la nouvelle recette de cocktail effectué avec succès")
+        title = request.form['nom']
+        difficulty = request.form['difficulte']
+        ingredients_concatenated = request.form['ingredientsConcatenated']
+        steps_concatenated = request.form['etapesConcatenated']
+        image_file = request.files['image']
 
-        return jsonify(request.form), 201
+        
+        new_recipe = Recipe(title=title, difficulty=difficulty, user_id=current_user.id)
 
-        """return redirect(url_for('index'))"""
+        
+        ingredients = ingredients_concatenated.split('\n')
+        
+        for ingredient in ingredients:
+            if ':' not in ingredient:
+                continue
+            ingredient_name, quantity = ingredient.split(':')
+            ingredient_obj = Ingredient.query.filter_by(name=ingredient_name).first()
+            if not ingredient_obj:
+                ingredient_obj = Ingredient(name=ingredient_name)
+                db.session.add(ingredient_obj)
+                db.session.commit()
+            recipe_ingredient = RecipeIngredient(quantity=quantity, ingredient_id=ingredient_obj.id)
+            new_recipe.recipe_ingredients.append(recipe_ingredient)
 
+        
+        steps = steps_concatenated.split('\n')
+        for step_description in steps:
+            if step_description.strip():
+                step = Step(description=step_description)
+                new_recipe.steps.append(step)
 
+        
+        if image_file:
+            file_extension = os.path.splitext(image_file.filename)[1]
+            filename = secure_filename(f"recipe_{title.replace(' ', '_')}{os.path.splitext(image_file.filename)[1]}")
+            image_file.save(os.path.join(UPLOAD_RECIPE_FOLDER, filename))
+            new_recipe.recipe_image = os.path.join('images/recipes', filename).replace('\\', '/')
 
+        
+        db.session.add(new_recipe)
+        db.session.commit()
+
+        flash("Submission of new cocktail recipe successfully completed")
+
+        return jsonify({"message": "Successfully Created Cocktail Recipe"}), 201
 
 
 

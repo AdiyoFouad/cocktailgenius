@@ -1,56 +1,56 @@
-{% extends 'layouts.html' %} 
+{% extends 'layouts.html' %}
 
 {% block content%}
 <div class="container-fluid p-2">
     <div class="card col-md-7 m-auto">
         <div class="card-body">
-            <form action="{{url_for('cocktail.new_cocktail')}}" id="cocktailForm" method="post">
-                <h4 class="text-center">Soumettre une nouvelle recette de cocktail</h4>
+            <form action="{{url_for('cocktail.new_cocktail')}}" id="cocktailForm" method="post" enctype="multipart/form-data">
+                <h4 class="text-center">Submit a new cocktail recipe</h4>
                 <hr class="mt-1">
                 <div class="row">
                     <div class="form-group col-md-7">
-                        <label for="nom" class="fw-semibold mb-0">Nom du Cocktail</label>
+                        <label for="nom" class="fw-semibold mb-0">Cocktail Name</label>
                         <input type="text" class="form-control rounded-2" name="nom" required>
                     </div>
                     <div class="form-group col">
-                        <label for="difficulte" class="fw-semibold mb-0">Difficulté</label>
+                        <label for="difficulte" class="fw-semibold mb-0">Difficulty</label>
                         <select class="form-select rounded-2" name="difficulte" required>
-                            <option value="Facile">Facile</option>
-                            <option value="Intermédiaire">Intermédiaire</option>
-                            <option value="Difficile">Difficile</option>
+                            <option value="Easy">Easy</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Hard">Hard</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="fw-semibold mb-0">Ingrédients</label>
+                    <label class="fw-semibold mb-0">Ingredients</label>
                     <div id="ingredients">
                         <div class="ingredient">
                             <div class="input-group">
-                                <input type="text" class="form-control rounded-2 col-6 me-2" name="ingredients[]" placeholder="Nom de l'ingrédient" required>
-                                <input type="text" class="form-control rounded-2 col-5" name="quantites[]" placeholder="Quantité" required>
+                                <input type="text" class="form-control rounded-2 col-6 me-2" name="ingredients[]" placeholder="Ingredient Name" required>
+                                <input type="text" class="form-control rounded-2 col-5" name="quantites[]" placeholder="Quantity" required>
                             </div>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-center"><button type="button" class="btn btn-primary mt-1" id="addIngredient">Ajouter un ingrédient</button></div>
+                    <div class="d-flex justify-content-center"><button type="button" class="btn btn-primary mt-1" id="addIngredient">Add Ingredient</button></div>
                 </div>
                 <div class="form-group">
-                    <label  class="fw-semibold mb-0">Étapes</label>
+                    <label  class="fw-semibold mb-0">Steps</label>
                     <div id="etapes">
                         <div class="etape">
                             <textarea class="form-control rounded-2" name="etapes[]" required></textarea>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-center"><button type="button" class="btn btn-primary mt-2" id="addEtape">Ajouter une étape</button></div>
+                    <div class="d-flex justify-content-center"><button type="button" class="btn btn-primary mt-2" id="addEtape">Add Step</button></div>
                 </div>
                 <div class="form-group">
-                    <label for="image" class="fw-semibold mb-0">Image du Cocktail</label>
+                    <label for="image" class="fw-semibold mb-0">Cocktail Image</label>
                     <input type="file" class="form-control rounded-2" name="image" required accept="image/*">
                 </div>
 
-                <input type="hidden" id="ingredientsConcatenated" name="ingredients">
-                <input type="hidden" id="etapesConcatenated" name="etapes">
+                <input type="hidden" id="ingredientsConcatenated" name="ingredientsConcatenated">
+                <input type="hidden" id="etapesConcatenated" name="etapesConcatenated">
                 <div class="form-group">
-                    <button type="button" onclick="concatAndSubmit()" class="btn btn-success col-10 offset-1">Créer la recette</button>
+                    <button type="button" onclick="concatAndSubmit()" class="btn btn-success col-10 offset-1">Create Recipe</button>
                 </div>
             </form>
         </div>
@@ -58,14 +58,14 @@
 </div>
 
 <script>
-    // JavaScript pour ajouter et supprimer des champs d'ingrédients et d'étapes
+    // JavaScript to add and remove ingredient and step fields
     document.getElementById("addIngredient").addEventListener("click", function() {
         var ingredients = document.getElementById("ingredients");
         var ingredient = document.createElement("div");
         ingredient.classList.add("ingredient");
         ingredient.innerHTML = `<div class="input-group mt-1">
-                                    <input type="text" class="form-control col-6 me-2" name="ingredients[]" placeholder="Nom de l'ingrédient" required>
-                                    <input type="text" class="form-control col-5 me-2" name="quantites[]" placeholder="Quantité" required>
+                                    <input type="text" class="form-control col-6 me-2" name="ingredients[]" placeholder="Ingredient Name" required>
+                                    <input type="text" class="form-control col-5 me-2" name="quantites[]" placeholder="Quantity" required>
                                 </div>`;
         ingredients.appendChild(ingredient);
         if (ingredients.children.length > 1) {
@@ -107,21 +107,21 @@
         var ingredientsConcatenated = "";
         var etapesConcatenated = "";
 
-        // Concaténer les valeurs des champs d'ingrédients
+        // Concatenate values of ingredient fields
         for (var i = 0; i < ingredients.length; i++) {
             ingredientsConcatenated += ingredients[i].value + " : " + quantites[i].value + "\n";
         }
 
-        // Concaténer les valeurs des champs d'étapes
+        // Concatenate values of step fields
         for (var j = 0; j < etapes.length; j++) {
             etapesConcatenated += etapes[j].value + "\n";
         }
 
-        // Stocker les valeurs concaténées dans des champs cachés
+        // Store concatenated values in hidden fields
         document.getElementById("ingredientsConcatenated").value = ingredientsConcatenated;
         document.getElementById("etapesConcatenated").value = etapesConcatenated;
 
-        // Soumettre le formulaire
+        // Submit the form
         document.getElementById("cocktailForm").submit();
     }
 </script>

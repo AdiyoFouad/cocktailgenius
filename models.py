@@ -1,23 +1,7 @@
 from database import db
 from flask_login import UserMixin
-import base64
+from sqlalchemy import Enum
 
-
-"""class User(db.Model):
-    __tablename__ = 'users'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    username = db.Column(db.String(50), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    firstname = db.Column(db.String(50), nullable=False)
-    lastname = db.Column(db.String(50), nullable=False)
-    password = db.Column(db.String(60), nullable=False)
-    is_admin = db.Column(db.Boolean, default=False, nullable=False) 
-    is_active = db.Column(db.Boolean, default=False, nullable=False)
-    is_authenticated =  db.Column(db.Boolean, default=False, nullable=False)
-    profile_image = db.Column(db.LargeBinary, nullable=True)
-
-    def get_id(self):
-        return str(self.id)"""
 
 
 class User(db.Model, UserMixin):
@@ -29,16 +13,17 @@ class User(db.Model, UserMixin):
     lastname = db.Column(db.String(50), nullable=False)
     password = db.Column(db.String(60), nullable=False)
     is_admin = db.Column(db.Boolean, default=False, nullable=False)
-    profile_image = db.Column(db.String(60), nullable=True)
+    profile_image = db.Column(db.String(80), nullable=True)
 
 class Recipe(db.Model):
     __tablename__ = 'recipes'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.Text, nullable=False)
-    instructions = db.Column(db.Text, nullable=False)
+    difficulty = db.Column(Enum('Easy', 'Intermediate', 'Hard', name='difficulty_enum'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    recipe_image = db.Column(db.String(80), nullable=True)
     user = db.relationship('User', backref=db.backref('recipes', lazy=True))
+    recipe_ingredients = db.relationship('RecipeIngredient', backref='recipe', lazy=True)
 
 class Ingredient(db.Model):
     __tablename__ = 'ingredients'
@@ -51,6 +36,13 @@ class RecipeIngredient(db.Model):
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), nullable=False)
     ingredient_id = db.Column(db.Integer, db.ForeignKey('ingredients.id'), nullable=False)
     quantity = db.Column(db.String(20), nullable=False)
+
+class Step(db.Model):
+    __tablename__ = 'steps'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    description = db.Column(db.Text, nullable=False)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), nullable=False)
+    recipe = db.relationship('Recipe', backref=db.backref('steps', lazy=True))
 
 class Comment(db.Model):
     __tablename__ = 'comments'
