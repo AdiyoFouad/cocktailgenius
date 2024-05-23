@@ -1,6 +1,7 @@
 from database import db
 from flask_login import UserMixin
 from sqlalchemy import Enum, func
+from datetime import datetime
 
 
 
@@ -64,6 +65,7 @@ class Comment(db.Model):
     user = db.relationship('User', backref=db.backref('comments', lazy=True))
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), nullable=False)
     recipe = db.relationship('Recipe', backref=db.backref('comments', lazy=True))
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now().date)
 
 class Rating(db.Model):
     __tablename__ = 'ratings'

@@ -95,33 +95,19 @@
                 <div class="card-body">
                     <h5>Commentaires des utilisateurs</h5>
                     <hr>
+                    {% for comment in cocktail.comments %}
                     <div class="row d-flex justify-content-center align-items-ceter">
-                        <i class="col-1 rounded-circle bg-primary ti ti-user text-white m-2 me-0 mb-4 d-flex justify-content-center align-items-center" style="width: 30px; height:30px;"></i>
+                        <div class="col-1 me-2 rounded-circle">
+                            <img src="{{url_for('static', filename=current_user.profile_image) }}" style="width: 30px; height:30px; border-radius: 100%;">
+                        </div>
                         <div class="col">
-                            <p class="fw-semibold mb-0">Magengo Duarte</p>
-                            <p class="mb-0 fs-3">c'est le meilleur cocktail qui puisse existé</p>
-                            <p class="fs-2 mt-0">20 mars 2024</p>
+                            <p class="fw-semibold mb-0">{{ comment.user.firstname[0] }}. {{ comment.user.lastname }}</p>
+                            <p class="mb-0 fs-3">{{ comment.text }}</p>
+                            <p class="fs-2 mt-0">{{ comment.created_at.strftime("%d %B %Y") }}</p>
                         </div>
                     </div>
                     <hr class="mt-0">
-                    <div class="row d-flex justify-content-center align-items-ceter">
-                        <i class="col-1 rounded-circle bg-primary ti ti-user text-white m-2 me-0 mb-4 d-flex justify-content-center align-items-center" style="width: 30px; height:30px;"></i>
-                        <div class="col">
-                            <p class="fw-semibold mb-0">Magengo Duarte</p>
-                            <p class="mb-0 fs-3">c'est le meilleur cocktail qui puisse existé</p>
-                            <p class="fs-2 mt-0">20 mars 2024</p>
-                        </div>
-                    </div>
-                    <hr class="mt-0">
-                    <div class="row d-flex justify-content-center align-items-ceter">
-                        <i class="col-1 rounded-circle bg-primary ti ti-user text-white m-2 me-0 mb-4 d-flex justify-content-center align-items-center" style="width: 30px; height:30px;"></i>
-                        <div class="col">
-                            <p class="fw-semibold mb-0">Magengo Duarte</p>
-                            <p class="mb-0 fs-3">c'est le meilleur cocktail qui puisse existé</p>
-                            <p class="fs-2 mt-0">20 mars 2024</p>
-                        </div>
-                    </div>
-                    <hr class="mt-0">
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -176,7 +162,7 @@
             <div class="modal-body">
                 <form action="/comment_recipe" method="post">
                     <div class="mb-3"> 
-                        <input type="text" name="ratings" id="ratings2" hidden>
+                        <input type="text" name="ratings" id="ratings3" hidden>
                         <input type="text" name="recipe" hidden value="{{cocktail.id}}">
                         <label for="comment" class="form-label">Your Comment</label>
                         <textarea class="form-control" id="comment" rows="3" name="comment" required></textarea>
@@ -221,6 +207,7 @@
         star.addEventListener('click', function(){
             document.getElementById("ratings1").value=parseInt(this.getAttribute('data-value'));
             document.getElementById("ratings2").value=parseInt(this.getAttribute('data-value'));
+            document.getElementById("ratings3").value=parseInt(this.getAttribute('data-value'));
             const popup_stars = document.querySelectorAll('#popup_stars i');
 
             popup_stars.forEach(p_star => {
