@@ -11,7 +11,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="mb-0">
-                        <h3>Cocktail : {{cocktail}}</h3>
+                        <h3>Cocktail : {{cocktail.title}}</h3>
                         <div class="logo_b d-flex align-items-center justify-content-center"><i class="fas fa-martini-glass text-black"></i></div>
                     </div>
                     <hr class="mt-0">
@@ -19,55 +19,54 @@
                     
                     <div class="d-flex justify-content-between align-items-center mt-3">
                         <div class="justify-content-center details_cocktail_img rounded overflow-hidden ">
-                            <img src="{{url_for('static', filename='images/bg.png')}}"  alt="CocktailGenius Logo" width="100%" >
+                            <img src="{{ url_for('static', filename=cocktail.recipe_image) }}"  alt="{{cocktail.title}}" >
                         </div>
                         <div>
-                            <p><i class="fas fa-martini-glass fs-3"></i> Facile</p><p class="d-flex align-items-center">
-                                <i class="fas fa-star fs-3 text-warning"></i>
-                                <i class="fas fa-star  fs-3 text-warning"></i>
-                                <i class="fas fa-star  fs-3 text-warning"></i>
-                                <i class="fas fa-star-half-alt  fs-3 text-warning"></i>
-                                <i class="far fa-star  fs-3 text-warning me"></i>
+                            <p><i class="fas fa-martini-glass fs-3"></i> {{cocktail.difficulty}}</p>
+                            <p class="d-flex align-items-center mt-1">
+                                {% set average_rating = cocktail.average_rating() %}
+                                {% for i in range(1, 6) %}
+                                    {% if average_rating >= i %}
+                                        <i class="fas fa-star fs-2 text-warning"></i>
+                                    {% elif average_rating > i - 1 and average_rating < i %}
+                                        <i class="fas fa-star-half-alt fs-2 text-warning"></i>
+                                    {% else %}
+                                        <i class="far fa-star fs-2 text-warning"></i>
+                                    {% endif %}
+                                {% endfor %}
+                                <span class="ms-1 fs-3">{{ cocktail.count_ratings() }} ratings</span>
                             </p>
-                            <span class=""><i class="fas fa-user-pen fs-1"></i> Publié par <a href="" class="text-warning fw-semibold">O. Joshua</a></span>
+                            <span class=""><i class="fas fa-user-pen fs-1"></i> By <a href="" class="text-warning fw-semibold">{{ cocktail.user.firstname[0] }}. {{ cocktail.user.lastname }}</a></span>
                         </div>
                     </div>
                     <hr>
 
-                    <h4>Ingrédients <small class="fs-3">(Pour 5 personnes)</small></h4>
+                    <h4>Ingredients <small class="fs-3">(For 5 people)</small></h4>
                     <table class="w-100 ms-2">
+                        {% for recipe_ingredient in cocktail.recipe_ingredients %}
                         <tr>
-                            <td>Sirop de sucre de canne</td>
-                            <td>75 cl</td>
+                            <td>{{ recipe_ingredient.ingredient.name }}</td>
+                            <td>{{ recipe_ingredient.quantity }}</td>
                         </tr>
-                        <tr>
-                            <td>Fruit de la passion (maracuja)</td>
-                            <td>25 </td>
-                        </tr>
-                        <tr>
-                            <td>Rhum blanc</td>
-                            <td>5 l</td>
-                        </tr>
+                        {% endfor %}
                     </table>
                     <hr>
 
-                    <h4>Préparation</h4>
-                    <h6>Etape 1</h6>
-                    <p>Réalisez la recette "Punch passion" directement en bouteilles.</p>
-                    <h6>Etape 2</h6>
-                    <p>Faire macérer pendant 15 jours la pulpe des fruits de la passion dans le rhum et le sirop de sucre de canne. Filtrer et mettre en bouteilles.</p>
-                    <h6>Etape 3</h6>
-                    <p>Servir dans un verre de type "".</p>
+                    <h4>Preparation</h4>
+                    {% for step in cocktail.steps %}
+                    <h6>Step {{ loop.index }}</h6>
+                    <p>{{ step.description }}</p>
+                    {% endfor %}
                     <hr>
 
                     <div class="bg-light rounded-5 text-center p-1 ">
-                        <p class="fw-semibold fs-5  mb-1">Noter cette recette</p>
-                        <p class="d-flex align-items-center justify-content-center mt-0">
-                            <i class="fas fa-star text-warning me-1 cursor-pointer" style="font-size: 25px;"></i>
-                            <i class="fas fa-star text-warning me-1 cursor-pointer" style="font-size: 25px;"></i>
-                            <i class="fas fa-star text-warning me-1 cursor-pointer" style="font-size: 25px;"></i>
-                            <i class="fas fa-star-half-alt text-warning me-1 cursor-pointer" style="font-size: 25px;"></i>
-                            <i class="far fa-star text-warning cursor-pointer" style="font-size: 25px;"></i>
+                        <p class="fw-semibold fs-5  mb-1">Rate this recipe</p>
+                        <p class="d-flex align-items-center justify-content-center mt-0" id="ratingStars">
+                            <i class="far fa-star text-warning me-1 cursor-pointer" data-value="1" style="font-size: 25px;" data-toggle="modal" data-target="#ratingModal" ></i>
+                            <i class="far fa-star text-warning me-1 cursor-pointer" data-value="2" style="font-size: 25px;" data-toggle="modal" data-target="#ratingModal"></i>
+                            <i class="far fa-star text-warning me-1 cursor-pointer" data-value="3" style="font-size: 25px;" data-toggle="modal" data-target="#ratingModal"></i>
+                            <i class="far fa-star text-warning me-1 cursor-pointer" data-value="4" style="font-size: 25px;" data-toggle="modal" data-target="#ratingModal"></i>
+                            <i class="far fa-star text-warning cursor-pointer" data-value="5" style="font-size: 25px;" data-toggle="modal" data-target="#ratingModal"></i>
                         </p>
                     </div>
                     
@@ -117,12 +116,93 @@
     </div>
 
     
+<!-- Fenêtre modale -->
+<div class="modal fade" id="ratingModal" tabindex="-1" aria-labelledby="ratingModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ratingModalLabel">Do you want to add a comment ?</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/rate_recipe" method="post">
+            <input type="text" name="rating" id="ratings1" hidden>
+            <input type="text" name="recipe" hidden value="{{cocktail.id}}">
+            <div class="d-flex justify-content-between align-items-center">
+                <p id="popup_stars" class="d-flex align-items-center justify-content-center mt-1">
+                    <i class="far fa-star text-warning me-1 "  style="font-size: 25px;"></i>
+                    <i class="far fa-star text-warning me-1 "  style="font-size: 25px;"></i>
+                    <i class="far fa-star text-warning me-1 "  style="font-size: 25px;"></i>
+                    <i class="far fa-star text-warning me-1 " style="font-size: 25px;" ></i>
+                    <i class="far fa-star text-warning " style="font-size: 25px;" ></i>
+                </p>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-star me-2 fs-2"></i>Send rate without comment</button>
+            </div>
+        </form>
+        <form action="/comment_recipe" method="post">
+          <div class="mb-3"> 
+            <input type="text" name="ratings" id="ratings2" hidden>
+            <label for="comment" class="form-label">Your Comment</label>
+            <textarea class="form-control" id="comment" rows="3" name="comment" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane me-2 fs-2"></i>Send</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
     
     
 </div>
 
+<script>
+    const stars = document.querySelectorAll('#ratingStars i');
+
+    stars.forEach(star => {
+        star.addEventListener('mouseover', function () {
+            const value = parseInt(this.getAttribute('data-value'));
+            for (let i = 0; i < stars.length; i++) {
+                if (i < value) {
+                    stars[i].classList.remove('far');
+                    stars[i].classList.add('fas');
+                } else {
+                    stars[i].classList.remove('fas');
+                    stars[i].classList.add('far');
+                }
+            }
+        });
+
+        star.addEventListener('mouseout', function () {
+            for (let i = 0; i < stars.length; i++) {
+                if (stars[i].classList.contains('fas')) {
+                    stars[i].classList.remove('fas');
+                    stars[i].classList.add('far');
+                }
+            }
+        });
+
+        star.addEventListener('click', function(){
+            document.getElementById("ratings1").value=parseInt(this.getAttribute('data-value'));
+            document.getElementById("ratings2").value=parseInt(this.getAttribute('data-value'));
+            const popup_stars = document.querySelectorAll('#popup_stars i');
+
+            popup_stars.forEach(p_star => {
+                if (p_star.classList.contains('fas')) {
+                    p_star.classList.remove('fas');
+                    p_star.classList.add('far');
+                }
+            });
+            for (let i = 0; i < popup_stars.length; i++) {
+                if (i < parseInt(this.getAttribute('data-value'))) {
+                    popup_stars[i].classList.remove('far');
+                    popup_stars[i].classList.add('fas');
+                }         
+            }
+        });
+    });
+</script>
 
 {%endblock%}
 
-
+ 

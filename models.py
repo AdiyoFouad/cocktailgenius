@@ -47,6 +47,7 @@ class RecipeIngredient(db.Model):
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), nullable=False)
     ingredient_id = db.Column(db.Integer, db.ForeignKey('ingredients.id'), nullable=False)
     quantity = db.Column(db.String(20), nullable=False)
+    ingredient = db.relationship('Ingredient', backref=db.backref('recipe_ingredients', lazy=True))
 
 class Step(db.Model):
     __tablename__ = 'steps'

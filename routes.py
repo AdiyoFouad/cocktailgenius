@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, session, jsonify, redirect, url_for, flash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-from models import User, Recipe, Ingredient, RecipeIngredient, Step
+from models import User, Recipe, Ingredient, RecipeIngredient, Step, Rating, Comment
 from database import db
 from werkzeug.utils import secure_filename
 import os
@@ -167,5 +167,24 @@ def new_cocktail():
 
         return jsonify({"message": "Successfully Created Cocktail Recipe"}), 201
 
+@cocktail_blueprint.route('/rate_recipe', methods=['POST'])
+@login_required
+def rate_recipe():
+    recipe_id = request.form['recipe']
+    existing_rating = Rating.query.filter_by(user_id=current_user.id, recipe_id=recipe_id).first()
+    
+    if existing_rating:
+        return jsonify({'message': 'Vous avez déjà noté cette recette.'}), 400
+    else:
+        rating_score = request.form['rating']
+        
+        new_rating = Rating(score=rating_score, user_id=current_user.id, recipe_id=recipe_id)
+        db.session.add(new_rating)
+        db.session.commit()
+        
+        return jsonify({'message': 'Votre notation a été enregistrée avec succès.'}), 201
 
-
+@cocktail_blueprint.route('/comment_recipe', methods=['POST'])
+@login_required
+def comment_recipe():
+    return jsonify(request.form)

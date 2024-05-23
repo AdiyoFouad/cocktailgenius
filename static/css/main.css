@@ -127,6 +127,11 @@ header a:hover{
     min-width: 300px;
 }
 
+.details_cocktail_img img{
+    width: auto;
+    height: auto;
+    max-height: 250px;
+}
 
 .details_cocktail_cmt{
     min-height: 50vh;
