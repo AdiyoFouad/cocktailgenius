@@ -8,27 +8,28 @@
     <div class="mt-2">
         <h2>My Profile</h2>
         <h3 class="mt-4">Edit your profile</h3>
-        <form action="" method="post"  class="w-75 m-auto">     
-            <img class="offset-2 mb-2" src="{{url_for('static', filename='images/bg.png')}}" alt="CocktailGenius Logo" height="100">
+        <form action="/update_profil_image" method="post"  class="w-75 m-auto" enctype="multipart/form-data">     
+            
+            <img class="offset-2 mb-2" src="{{url_for('static', filename=current_user.profile_image) }}" id="profile_avatar" alt="User Avatar">
             <div class="input-group">
                 <label for="avatar" class="fw-semibold  col-2">Avatar</label>
                 <input type="file" class="form-control rounded-2" name="avatar" required accept="image/*">
             </div>
             <div class="input-group mt-3">
                 <label for="avatar" class="fw-semibold  col-2">Username*</label>
-                <input type="text" class="form-control rounded-2" name="avatar"  disabled required accept="image/*">
+                <input type="text" class="form-control rounded-2"  value="{{current_user.username}}"  disabled required accept="image/*">
             </div>
             <div class="input-group mt-3">
                 <label for="avatar" class="fw-semibold  col-2">Email*</label>
-                <input type="text" class="form-control rounded-2" name="avatar"  disabled required accept="image/*">
+                <input type="text" class="form-control rounded-2" value="{{current_user.email}}"  disabled required accept="image/*">
             </div>
             <div class="input-group mt-3">
                 <label for="avatar" class="fw-semibold  col-2">Firstname*</label>
-                <input type="text" class="form-control rounded-2" name="avatar"  disabled required accept="image/*">
+                <input type="text" class="form-control rounded-2" value="{{current_user.firstname}}"  disabled required accept="image/*">
             </div>
             <div class="input-group mt-3">
                 <label for="avatar" class="fw-semibold  col-2">Lastname*</label>
-                <input type="text" class="form-control rounded-2" name="avatar"  disabled required accept="image/*">
+                <input type="text" class="form-control rounded-2" value="{{current_user.lastname}}"  disabled required accept="image/*">
             </div>
             <div class="form-group justify-content-center d-flex mt-3">
                 <button type="submit" class="btn btn-success">Save</button>

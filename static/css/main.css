@@ -1,6 +1,6 @@
 
 @import url('fontawesome.css');
-@import url('bootstrap.min.css');
+@import url('bootstrap.css');
 
 header a {
     color: white;
@@ -144,3 +144,9 @@ header a:hover{
     background-position: center;
 }
 
+#profile_avatar {
+    height: 100px;
+    width: 100px;
+    border-radius: 100%;
+    overflow: hidden;
+}

@@ -1,6 +1,6 @@
 from database import db
 from flask_login import UserMixin
-
+import base64
 
 
 """class User(db.Model):
@@ -29,7 +29,7 @@ class User(db.Model, UserMixin):
     lastname = db.Column(db.String(50), nullable=False)
     password = db.Column(db.String(60), nullable=False)
     is_admin = db.Column(db.Boolean, default=False, nullable=False)
-    profile_image = db.Column(db.LargeBinary, nullable=True)
+    profile_image = db.Column(db.String(60), nullable=True)
 
 class Recipe(db.Model):
     __tablename__ = 'recipes'

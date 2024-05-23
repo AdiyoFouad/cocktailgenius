@@ -2,6 +2,10 @@ from flask import Blueprint, render_template, request, session, jsonify, redirec
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from models import User
 from database import db
+from werkzeug.utils import secure_filename
+import os
+
+UPLOAD_FOLDER = 'static/images/users_avatar'
 
 
 
@@ -47,7 +51,22 @@ def user_login():
                 return redirect(url_for('user.user_login'))
     else:
         return render_template('login.html')
-            
+
+
+@user_blueprint.route('/update_profil_image', methods=['POST', 'GET'])
+@login_required
+def update_profil_image():
+    if request.method == 'POST':
+        file = request.files['avatar']
+        file_extension = os.path.splitext(file.filename)[1]
+        filename = 'avatar_{}{}'.format(current_user.id, file_extension)
+        file.save(os.path.join(UPLOAD_FOLDER, filename))
+        
+        current_user.profile_image = os.path.join('images/users_avatar', filename).replace('\\', '/')
+        db.session.commit()
+        
+        flash('Profile image updated successfully.', 'success')
+        return redirect(url_for('main.profil'))
 
 @user_blueprint.route('/logout')
 @login_required
