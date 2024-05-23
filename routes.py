@@ -116,7 +116,8 @@ def cocktails():
 @cocktail_blueprint.route('/cocktail/<int:cocktail_id>')
 def details_cocktail(cocktail_id):
     cocktail = Recipe.query.filter_by(id=cocktail_id).first()
-    return render_template('details.html', title="Cocktail Details", cocktail = cocktail)
+    user_rating = Rating.query.filter_by(user_id=current_user.id, recipe_id=cocktail_id).first()
+    return render_template('details.html', title="Cocktail Details", cocktail = cocktail, user_rating=user_rating)
 
 @cocktail_blueprint.route('/new_cocktail', methods=['POST'])
 def new_cocktail():
@@ -187,4 +188,24 @@ def rate_recipe():
 @cocktail_blueprint.route('/comment_recipe', methods=['POST'])
 @login_required
 def comment_recipe():
-    return jsonify(request.form)
+    recipe_id = request.form['recipe']
+    comment_text = request.form['comment']
+
+    existing_rating = Rating.query.filter_by(user_id=current_user.id, recipe_id=recipe_id).first()
+
+    if existing_rating:
+        new_comment = Comment(text=comment_text, user_id=current_user.id, recipe_id=recipe_id)
+        db.session.add(new_comment)
+        db.session.commit()
+        return jsonify({'message': 'Votre commentaire a été ajouté avec succès.'}), 201
+    else:
+        rating_score = request.form['ratings']
+        if rating_score is None:
+            return jsonify({'message': 'Vous devez d\'abord noter la recette.'}), 400
+        
+        new_rating = Rating(score=rating_score, user_id=current_user.id, recipe_id=recipe_id)
+        new_comment = Comment(text=comment_text, user_id=current_user.id, recipe_id=recipe_id)
+        db.session.add(new_rating)
+        db.session.add(new_comment)
+        db.session.commit()
+        return jsonify({'message': 'Votre notation et commentaire ont été enregistrés avec succès.'}), 201
