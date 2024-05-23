@@ -1,6 +1,6 @@
 from database import db
 from flask_login import UserMixin
-from sqlalchemy import Enum
+from sqlalchemy import Enum, func
 
 
 
@@ -24,6 +24,17 @@ class Recipe(db.Model):
     recipe_image = db.Column(db.String(80), nullable=True)
     user = db.relationship('User', backref=db.backref('recipes', lazy=True))
     recipe_ingredients = db.relationship('RecipeIngredient', backref='recipe', lazy=True)
+
+    
+    def count_ratings(self):
+        return Rating.query.filter_by(recipe_id=self.id).count()
+    
+    def average_rating(self):
+        avg_rating = Rating.query.with_entities(func.avg(Rating.score)).filter_by(recipe_id=self.id).scalar()
+        if avg_rating:
+            return round(avg_rating, 1)
+        else:
+            return 0
 
 class Ingredient(db.Model):
     __tablename__ = 'ingredients'

@@ -110,11 +110,13 @@ cocktail_blueprint = Blueprint('cocktail', __name__)
 
 @cocktail_blueprint.route('/cocktails')
 def cocktails():
-    return render_template('cocktails.html', title="Cocktails")
+    cocktails = Recipe.query.all()
+    return render_template('cocktails.html', title="Cocktails", cocktails = cocktails)
 
 @cocktail_blueprint.route('/cocktail/<int:cocktail_id>')
 def details_cocktail(cocktail_id):
-    return render_template('details.html', title="Cocktail Details", cocktail = cocktail_id)
+    cocktail = Recipe.query.filter_by(id=cocktail_id).first()
+    return render_template('details.html', title="Cocktail Details", cocktail = cocktail)
 
 @cocktail_blueprint.route('/new_cocktail', methods=['POST'])
 def new_cocktail():
