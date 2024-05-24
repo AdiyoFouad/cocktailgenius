@@ -220,3 +220,12 @@ def user_cocktails(username):
     user_cocktails = Recipe.query.filter_by(user_id=user.id).all()
     
     return render_template('user_cocktails.html', title="User Cocktails", cocktails=user_cocktails, author=user)
+
+@cocktail_blueprint.route('/search_cocktail', methods=['GET', 'POST'])
+def search_cocktail():
+    if request.method == 'POST':
+        search_query = request.form['search_query']
+        cocktails = Recipe.query.filter(Recipe.title.ilike(f'%{search_query}%')).all()
+        return render_template('search_results.html', title="Search Results", cocktails=cocktails, search_query=search_query)
+    else:
+        return render_template('search.html', title="Search Cocktails")
