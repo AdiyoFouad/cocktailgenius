@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, session, jsonify, redirect, url_for, flash
+from flask import Blueprint, render_template, request, session, jsonify, redirect, url_for, flash, abort
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from models import User, Recipe, Ingredient, RecipeIngredient, Step, Rating, Comment
 from database import db
@@ -209,3 +209,14 @@ def comment_recipe():
         db.session.add(new_comment)
         db.session.commit()
         return jsonify({'message': 'Votre notation et commentaire ont été enregistrés avec succès.'}), 201
+
+@cocktail_blueprint.route('/user/<string:username>/cocktails')
+def user_cocktails(username):
+    user = User.query.filter_by(username=username).first()
+    
+    if not user:
+        abort(404)
+    
+    user_cocktails = Recipe.query.filter_by(user_id=user.id).all()
+    
+    return render_template('user_cocktails.html', title="User Cocktails", cocktails=user_cocktails, author=user)
