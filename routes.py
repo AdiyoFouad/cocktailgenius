@@ -4,6 +4,7 @@ from models import User, Recipe, Ingredient, RecipeIngredient, Step, Rating, Com
 from database import db
 from werkzeug.utils import secure_filename
 import os
+from sqlalchemy import or_ ,cast, String
 
 UPLOAD_FOLDER = 'static/images/users_avatar'
 UPLOAD_RECIPE_FOLDER = 'static/images/recipes_images'
@@ -229,3 +230,18 @@ def search_cocktail():
         return render_template('search_results.html', title="Search Results", cocktails=cocktails, search_query=search_query)
     else:
         return render_template('search.html', title="Search Cocktails")
+
+
+@cocktail_blueprint.route('/async_search_cocktail', methods=['POST', 'GET'])
+def async_search_cocktail():
+    search_query = request.form.get('async_search_query', '')
+
+    cocktails = Recipe.query.filter(
+        or_(
+            Recipe.title.ilike(f'%{search_query}%'),
+            cast(Recipe.difficulty, String).ilike(f'%{search_query}%'),
+            Recipe.recipe_ingredients.any(RecipeIngredient.ingredient.has(name=search_query))
+        )
+    ).all()
+
+    return render_template('async_result.html', cocktails=cocktails)
