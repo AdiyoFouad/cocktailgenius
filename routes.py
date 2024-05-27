@@ -69,7 +69,7 @@ def user_login():
                 session.pop('next')
                 return redirect(next_url or url_for('main.index'))
             else:
-                return render_template('cocktails.html', title="Cocktails")
+                return redirect(url_for('cocktail.cocktails'))
         else:
             flash('Invalid username or password', 'error')
             if session.get('next'):
@@ -157,9 +157,9 @@ def new_cocktail():
         
         if image_file:
             file_extension = os.path.splitext(image_file.filename)[1]
-            filename = secure_filename(f"recipe_{title.replace(' ', '_')}{os.path.splitext(image_file.filename)[1]}")
+            filename = secure_filename(f"recipe_{title.replace(' ', '_')}_{current_user.username}{os.path.splitext(image_file.filename)[1]}")
             image_file.save(os.path.join(UPLOAD_RECIPE_FOLDER, filename))
-            new_recipe.recipe_image = os.path.join('images/recipes', filename).replace('\\', '/')
+            new_recipe.recipe_image = os.path.join('images/recipes_images', filename).replace('\\', '/')
 
         
         db.session.add(new_recipe)
@@ -167,7 +167,7 @@ def new_cocktail():
 
         flash("Submission of new cocktail recipe successfully completed")
 
-        return jsonify({"message": "Successfully Created Cocktail Recipe"}), 201
+        return redirect(url_for('cocktail.cocktails'))
 
 @cocktail_blueprint.route('/rate_recipe', methods=['POST'])
 @login_required
@@ -230,7 +230,6 @@ def search_cocktail():
         return render_template('search_results.html', title="Search Results", cocktails=cocktails, search_query=search_query)
     else:
         return render_template('search.html', title="Search Cocktails")
-
 
 @cocktail_blueprint.route('/async_search_cocktail', methods=['POST', 'GET'])
 def async_search_cocktail():

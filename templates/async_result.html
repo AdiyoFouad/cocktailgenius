@@ -1,3 +1,12 @@
+{% if cocktails|length == 0 %}
+
+<div>
+    <p class="fw-semibold text-center">No results available</p>
+</div>
+
+{% endif %}
+
+
 {% for cocktail in cocktails %}
             <div class="col-3 grid-margin stretch-card">
                 <div class="cocktail_card card navlink rounded-4 p-0 overflow-hidden">
@@ -32,4 +41,4 @@
                     </div>
                 </div>
             </div>
-            {% endfor %}
+{% endfor %}
