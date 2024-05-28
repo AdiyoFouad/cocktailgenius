@@ -36,6 +36,11 @@ def profil():
 def submit_recipe():
     return render_template('submit_recipe.html', title= "Submit Recipe")
 
+@main_blueprint.route('/admin_panel')
+@login_required
+def admin_panel():
+    cocktails = Recipe.query.all()
+    return render_template('admin_panel.html', title="Admin Panel", cocktails=cocktails)
 
 user_blueprint = Blueprint('user', __name__)
 @user_blueprint.route('/new_user', methods = ['POST'])
@@ -111,7 +116,7 @@ cocktail_blueprint = Blueprint('cocktail', __name__)
 
 @cocktail_blueprint.route('/cocktails')
 def cocktails():
-    cocktails = Recipe.query.all()
+    cocktails = Recipe.query.filter_by(valid=True).all()
     return render_template('cocktails.html', title="Cocktails", cocktails = cocktails)
 
 @cocktail_blueprint.route('/cocktail/<int:cocktail_id>')
@@ -244,3 +249,46 @@ def async_search_cocktail():
     ).all()
 
     return render_template('async_result.html', cocktails=cocktails)
+
+
+@cocktail_blueprint.route('/cocktail/approve/<int:cocktail_id>')
+def approve_cocktail(cocktail_id):
+    if not current_user.is_admin:
+        flash(f"You are not allowed to delete a recipe", 'error')
+    cocktail = Recipe.query.filter_by(id=cocktail_id).first()
+    cocktail.valid = True
+    db.session.commit()
+    flash(f"{cocktail.title} is approved", 'success')
+    return redirect(url_for('main.admin_panel'))
+
+
+@cocktail_blueprint.route('/cocktail/desapprove/<int:cocktail_id>')
+def desapprove_cocktail(cocktail_id):
+    if not current_user.is_admin:
+        flash(f"You are not allowed to delete a recipe", 'error')
+    cocktail = Recipe.query.filter_by(id=cocktail_id).first()
+    cocktail.valid = False
+    db.session.commit()
+    flash(f"{cocktail.title} is desapproved", 'success')
+    return redirect(url_for('main.admin_panel'))
+
+@cocktail_blueprint.route('/cocktail/delete/<int:cocktail_id>')
+def delete_cocktail(cocktail_id):
+    if not current_user.is_admin:
+        flash(f"You are not allowed to delete a recipe", 'error')
+    cocktail = Recipe.query.get(cocktail_id)
+    if cocktail:
+        db.session.delete(cocktail)
+        db.session.commit()
+        flash(f"{cocktail.title} deleted successfully", 'success')
+    else:
+        flash(f"Cocktail with ID {cocktail_id} not found", 'error')
+    return redirect(url_for('main.admin_panel'))
+
+
+
+
+
+
+
+

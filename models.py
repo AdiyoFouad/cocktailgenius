@@ -24,7 +24,8 @@ class Recipe(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     recipe_image = db.Column(db.String(80), nullable=True)
     user = db.relationship('User', backref=db.backref('recipes', lazy=True))
-    recipe_ingredients = db.relationship('RecipeIngredient', backref='recipe', lazy=True)
+    valid = db.Column(db.Boolean, default=False, nullable=False)
+    recipe_ingredients = db.relationship('RecipeIngredient', backref='recipe', lazy=True, cascade='all, delete')
 
     
     def count_ratings(self):
@@ -48,14 +49,14 @@ class RecipeIngredient(db.Model):
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), nullable=False)
     ingredient_id = db.Column(db.Integer, db.ForeignKey('ingredients.id'), nullable=False)
     quantity = db.Column(db.String(20), nullable=False)
-    ingredient = db.relationship('Ingredient', backref=db.backref('recipe_ingredients', lazy=True))
+    ingredient = db.relationship('Ingredient', backref=db.backref('recipe_ingredients', lazy=True, cascade='all, delete'))
 
 class Step(db.Model):
     __tablename__ = 'steps'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     description = db.Column(db.Text, nullable=False)
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.id'), nullable=False)
-    recipe = db.relationship('Recipe', backref=db.backref('steps', lazy=True))
+    recipe = db.relationship('Recipe', backref=db.backref('steps', lazy=True, cascade='all, delete'))
 
 class Comment(db.Model):
     __tablename__ = 'comments'

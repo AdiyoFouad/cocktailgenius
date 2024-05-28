@@ -1,0 +1,52 @@
+{% extends 'layouts.html' %} 
+
+
+{% block content%}
+
+
+<div class="container-fluid ps-4">
+    <div class="mt-2">
+        <h4 class="mt-4">Admin Panel</h4>
+        <div class="container">
+            <table class="table table-striped">
+                <thead>
+                    <th>Coktails Name</th>
+                    <th>Published by</th>
+                    <th>Difficulty</th>
+                    <th>Status</th>
+                    <th></th> 
+                </thead>
+                <tbody>
+                    {% for cocktail in cocktails%}
+                    <tr>
+                        <td class="fw-bolder">{{cocktail.title}}</td>
+                        <td>{{cocktail.user.firstname[0]}}. {{cocktail.user.lastname}}</td>
+                        <td>{{cocktail.difficulty}}</td>
+                        <td>
+                            {% if cocktail.valid%}
+                            <p class="fw-bolder text-success">Approved</p>
+                            {% else %}
+                            <p class="fw-bolder text-danger">Not approved</p>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('cocktail.details_cocktail', cocktail_id=cocktail.id) }}" class="btn btn-outline-warning"><i class="fas fa-eye"></i></a>
+                            {% if cocktail.valid%}
+                            <a href="/cocktail/desapprove/{{cocktail.id}}" class="btn btn-warning" onclick="return confirm('Are you sure to desapprouve?')">Desapprove</a>
+                            {% else %}
+                            <a href="/cocktail/approve/{{cocktail.id}}" class="btn btn-success" onclick="return confirm('Are you sure to approve?')">Approve</a>
+                            {% endif %}
+                            <a href="/cocktail/delete/{{cocktail.id}}" class="btn btn-danger" onclick="return confirm('Are you sure to delete?')">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+{%endblock%}
+
+

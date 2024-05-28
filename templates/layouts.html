@@ -12,8 +12,11 @@
             <a class="navbar-brand " href="/"><img src="{{url_for('static', filename='images/logos/logo.png')}}" alt="CocktailGenius Logo" height="50"></a>
     
             <div class="d-flex align-items-center justify-content-end">
-                <div>    
-                    <a class="fw-semibold me-2" href="/cocktails">  Cocktails</a>
+                <div>  
+                    {% if current_user.is_admin %}
+                    <a class="fw-semibold me-2" href="/admin_panel"> Admin</a>
+                    {% endif %}
+                    <a class="fw-semibold me-2" href="/cocktails"> Cocktails</a>
                     <a class="fw-semibold me-2" href="/submit_recipe">  Submit a Recipe</a>
                     <a class="fw-semibold me-2" href="/profil"> Profile</a>
                   </div>

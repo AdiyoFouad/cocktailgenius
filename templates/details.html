@@ -36,7 +36,7 @@
                                 {% endfor %}
                                 <span class="ms-1 fs-3">{{ cocktail.count_ratings() }} ratings</span>
                             </p>
-                            <span class=""><i class="fas fa-user-pen fs-1"></i> By <a href="" class="text-warning fw-semibold">{{ cocktail.user.firstname[0] }}. {{ cocktail.user.lastname }}</a></span>
+                            <span class=""><i class="fas fa-user-pen fs-1"></i> By <a href="/user/{{ cocktail.user.username }}/cocktails" class="text-warning fw-semibold">{{ cocktail.user.firstname[0] }}. {{ cocktail.user.lastname }}</a></span>
                         </div>
                     </div>
                     <hr>
@@ -58,6 +58,7 @@
                     <p>{{ step.description }}</p>
                     {% endfor %}
                     <hr>
+                    {% if cocktail.valid %}
                     <div class="bg-light rounded-5 text-center p-1">
                         <p class="fw-semibold fs-5 mb-1">Rate this recipe</p>
                         <p class="d-flex align-items-center justify-content-center mt-0" id="ratingStars">
@@ -80,6 +81,12 @@
                             {% endif %}
                         </p>
                     </div>
+                    {% else %}
+                    <div class="bg-light rounded-5 text-center p-2 d-flex justify-content-center">
+                        <a href="/cocktail/approve/{{cocktail.id}}" class="btn btn-success w-25 me-2" onclick="return confirm('Are you sure to approve?')">Approve</a>
+                        <a href="/cocktail/delete/{{cocktail.id}}" class="btn btn-danger w-25" onclick="return confirm('Are you sure to delete?')">Delete</a>
+                    </div>
+                    {% endif %}
                     
                     
                 </div>
