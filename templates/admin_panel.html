@@ -1,13 +1,52 @@
-{% extends 'layouts.html' %} 
+{% extends 'layouts.html' %}
 
-
-{% block content%}
-
+{% block content %}
 
 <div class="container-fluid ps-4">
     <div class="mt-2">
         <h4 class="mt-4">Admin Panel</h4>
-        <div class="container">
+
+        <!-- Ajouter le formulaire de filtre -->
+        <div class="container mb-4">
+            <form id="filter-form" onreset="updateRow()">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label for="author-filter">Published by:</label>
+                        <select id="author-filter" class="form-select" name="author" onchange="updateRow()">
+                            <option value="">All</option>
+                            {% for user in users%}
+                            <option value="{{user.id}}">{{user.firstname}} {{user.lastname}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="difficulty-filter">Difficulty:</label>
+                        <select id="difficulty-filter" class="form-select" name="difficulty" onchange="updateRow()">
+                            <option value="">All</option>
+                            <option value="Easy">Easy</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Hard">Hard</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="status-filter">Status</label>
+                        <select id="status-filter" class="form-select" name="status"  onchange="updateRow()">
+                            <option value="">All</option>
+                            <option value="Approved">Approved</option>
+                            <option value="Not approved">Not approved</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-12 justify-content-center d-flex">
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                        <button type="reset" class="btn btn-secondary ms-2">Reset</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="container" id="filtered-results">
             <table class="table table-striped">
                 <thead>
                     <th>Coktails Name</th>
@@ -46,7 +85,39 @@
     </div>
 </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function(){
+        document.getElementById('filter-form').addEventListener('submit', function(event){
+            event.preventDefault(); 
+            updateRow();
+            
+        });
+    });
+    function updateRow(){
+        var status = document.getElementById('status-filter').value;
+            var author = document.getElementById('author-filter').value;
+            var difficulty = document.getElementById('difficulty-filter').value;
 
-{%endblock%}
+            fetch('/filter_cocktails', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    status: status,
+                    author: author,
+                    difficulty: difficulty
+                })
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('filtered-results').innerHTML = data;
+                console.log(data)
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
 
-
+{% endblock %}

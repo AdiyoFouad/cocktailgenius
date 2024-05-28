@@ -4,7 +4,7 @@ from models import User, Recipe, Ingredient, RecipeIngredient, Step, Rating, Com
 from database import db
 from werkzeug.utils import secure_filename
 import os
-from sqlalchemy import or_ ,cast, String
+from sqlalchemy import and_,or_ ,cast, String
 
 UPLOAD_FOLDER = 'static/images/users_avatar'
 UPLOAD_RECIPE_FOLDER = 'static/images/recipes_images'
@@ -40,7 +40,8 @@ def submit_recipe():
 @login_required
 def admin_panel():
     cocktails = Recipe.query.all()
-    return render_template('admin_panel.html', title="Admin Panel", cocktails=cocktails)
+    users = User.query.all()
+    return render_template('admin_panel.html', title="Admin Panel", cocktails=cocktails, users=users)
 
 user_blueprint = Blueprint('user', __name__)
 @user_blueprint.route('/new_user', methods = ['POST'])
@@ -56,7 +57,7 @@ def new_user():
  
         db.session.add(n_user)
         db.session.commit()
-        flash("Your account has been successfully created")
+        flash("Your account has been successfully created", 'success')
         return render_template(url_for('/user_login'), title = "Login")
 
 
@@ -181,7 +182,8 @@ def rate_recipe():
     existing_rating = Rating.query.filter_by(user_id=current_user.id, recipe_id=recipe_id).first()
     
     if existing_rating:
-        return jsonify({'message': 'Vous avez déjà noté cette recette.'}), 400
+        flash('Vous avez déjà noté cette recette.', 'error')
+        return redirect(url_for('cocktail.details_cocktail', cocktail_id=recipe_id))
     else:
         rating_score = request.form['rating']
         
@@ -189,7 +191,8 @@ def rate_recipe():
         db.session.add(new_rating)
         db.session.commit()
         
-        return jsonify({'message': 'Votre notation a été enregistrée avec succès.'}), 201
+        flash('Votre notation a été enregistrée avec succès.', 'success')
+        return redirect(url_for('cocktail.details_cocktail', cocktail_id=recipe_id))
 
 @cocktail_blueprint.route('/comment_recipe', methods=['POST'])
 @login_required
@@ -203,18 +206,19 @@ def comment_recipe():
         new_comment = Comment(text=comment_text, user_id=current_user.id, recipe_id=recipe_id)
         db.session.add(new_comment)
         db.session.commit()
-        return jsonify({'message': 'Votre commentaire a été ajouté avec succès.'}), 201
+        return redirect(url_for('cocktail.details_cocktail', cocktail_id=recipe_id))
     else:
         rating_score = request.form['ratings']
         if rating_score is None:
-            return jsonify({'message': 'Vous devez d\'abord noter la recette.'}), 400
+            flash("You must first rate the recipe.",'error')
+            return redirect(url_for('cocktail.details_cocktail', cocktail_id=recipe_id))
         
         new_rating = Rating(score=rating_score, user_id=current_user.id, recipe_id=recipe_id)
         new_comment = Comment(text=comment_text, user_id=current_user.id, recipe_id=recipe_id)
         db.session.add(new_rating)
         db.session.add(new_comment)
         db.session.commit()
-        return jsonify({'message': 'Votre notation et commentaire ont été enregistrés avec succès.'}), 201
+        return redirect(url_for('cocktail.details_cocktail', cocktail_id=recipe_id))
 
 @cocktail_blueprint.route('/user/<string:username>/cocktails')
 def user_cocktails(username):
@@ -223,7 +227,7 @@ def user_cocktails(username):
     if not user:
         abort(404)
     
-    user_cocktails = Recipe.query.filter_by(user_id=user.id).all()
+    user_cocktails = Recipe.query.filter_by(user_id=user.id, valid=True).all()
     
     return render_template('user_cocktails.html', title="User Cocktails", cocktails=user_cocktails, author=user)
 
@@ -231,7 +235,7 @@ def user_cocktails(username):
 def search_cocktail():
     if request.method == 'POST':
         search_query = request.form['search_query']
-        cocktails = Recipe.query.filter(Recipe.title.ilike(f'%{search_query}%')).all()
+        cocktails = Recipe.query.filter(Recipe.title.ilike(f'%{search_query}%'), Recipe.valid==True).all()
         return render_template('search_results.html', title="Search Results", cocktails=cocktails, search_query=search_query)
     else:
         return render_template('search.html', title="Search Cocktails")
@@ -241,15 +245,40 @@ def async_search_cocktail():
     search_query = request.form.get('async_search_query', '')
 
     cocktails = Recipe.query.filter(
-        or_(
-            Recipe.title.ilike(f'%{search_query}%'),
-            cast(Recipe.difficulty, String).ilike(f'%{search_query}%'),
-            Recipe.recipe_ingredients.any(RecipeIngredient.ingredient.has(name=search_query))
+        and_(
+            Recipe.valid == True,
+            or_(
+                Recipe.title.ilike(f'%{search_query}%'),
+                cast(Recipe.difficulty, String).ilike(f'%{search_query}%'),
+                Recipe.recipe_ingredients.any(RecipeIngredient.ingredient.has(name=search_query))
+            )
         )
     ).all()
 
     return render_template('async_result.html', cocktails=cocktails)
 
+@cocktail_blueprint.route('/filter_cocktails', methods=['POST'])
+def filter_cocktails():
+    status = request.json.get('status', None)
+    author = request.json.get('author', None)
+    difficulty = request.json.get('difficulty', None)
+    filtered_cocktails = Recipe.query
+    
+    if status:
+        if status == "Approved":
+            filtered_cocktails = filtered_cocktails.filter(Recipe.valid == True)
+        elif status == "Not approved":
+            filtered_cocktails = filtered_cocktails.filter(Recipe.valid == False)
+    if author:
+        filtered_cocktails = filtered_cocktails.filter(Recipe.user_id == author)
+    if difficulty:
+        filtered_cocktails = filtered_cocktails.filter(cast(Recipe.difficulty, String).ilike(f'%{difficulty}%'))
+    
+    
+    filtered_cocktails = filtered_cocktails.all()
+
+    
+    return render_template('admin_filter_table.html', cocktails=filtered_cocktails)
 
 @cocktail_blueprint.route('/cocktail/approve/<int:cocktail_id>')
 def approve_cocktail(cocktail_id):
