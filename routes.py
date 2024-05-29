@@ -4,7 +4,7 @@ from models import User, Recipe, Ingredient, RecipeIngredient, Step, Rating, Com
 from database import db
 from werkzeug.utils import secure_filename
 import os
-from sqlalchemy import and_,or_ ,cast, String
+from sqlalchemy import and_,or_ ,cast, String, func
 
 UPLOAD_FOLDER = 'static/images/users_avatar'
 UPLOAD_RECIPE_FOLDER = 'static/images/recipes_images'
@@ -117,7 +117,7 @@ cocktail_blueprint = Blueprint('cocktail', __name__)
 
 @cocktail_blueprint.route('/cocktails')
 def cocktails():
-    cocktails = Recipe.query.filter_by(valid=True).all()
+    cocktails = Recipe.query.filter_by(valid=True).order_by(func.lower(Recipe.title)).all()
     return render_template('cocktails.html', title="Cocktails", cocktails = cocktails)
 
 @cocktail_blueprint.route('/cocktail/<int:cocktail_id>')

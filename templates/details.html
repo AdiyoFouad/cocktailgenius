@@ -41,7 +41,7 @@
                     </div>
                     <hr>
 
-                    <h4>Ingredients <small class="fs-3">(For 5 people){{current_user.score}}</small></h4>
+                    <h4>Ingredients <small class="fs-3">(For 1 people)</small></h4>
                     <table class="w-100 ms-2">
                         {% for recipe_ingredient in cocktail.recipe_ingredients %}
                         <tr>
@@ -100,7 +100,7 @@
         <div class="col  grid-margin stretch-card">
             <div class="card details_cocktail_cmt">
                 <div class="card-body">
-                    <h5>Commentaires des utilisateurs</h5>
+                    <h5>Users comments</h5>
                     <hr>
                     {% for comment in cocktail.comments %}
                     <div class="row d-flex justify-content-center align-items-ceter">
