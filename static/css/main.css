@@ -10,6 +10,14 @@
     z-index: 1000;
 }
 
+.layout_bg {
+    background-image: url('../images/bg2.png ');
+    background-repeat: repeat;
+    background-size: cover;
+    background-position: center;
+    height: auto;
+    position: relative;
+}
 
 header a {
     color: white;
@@ -156,6 +164,10 @@ header a:hover{
     background-image: url('../images/bg.png '); 
     background-size: cover;
     background-position: center;
+}
+
+.login-logo-container img{
+    height: 150px;
 }
 
 #profile_avatar {

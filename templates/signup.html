@@ -13,11 +13,11 @@
             <!-- Left part with the logo -->
             <div class="col-lg-6 d-none d-lg-block login-logo-container">
                 <div class="overlay">
-                    <img src="{{url_for('static', filename='images/logos/logo.png')}}" alt="Platform logo" width="70%">
+                    <a href="/"><img src="{{url_for('static', filename='images/logos/logo.png')}}" class="fa-fade" alt="Platform logo" ></a>
                 </div>
             </div>
             <!-- Right part with the signup form -->
-            <div class="col-lg-6 bg-light" style="height: 100vh;">
+            <div class="col-lg-6 bg-light layout_bg" style="height: 100vh;">
                 <div class="d-flex justify-content-center align-items-center h-100">
                     <form action="/new_user" method="post" id="signup-form" class="bg-light-warning border p-4 rounded" style="width: 80%;" onsubmit="return validateSignupForm()">
                         <h2 class="mb-4">Sign Up</h2>
