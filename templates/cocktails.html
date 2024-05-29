@@ -27,7 +27,7 @@
                         <h1 class="card-title mt-3 text-center">{{ cocktail.title }}</h1>
                         <div class="d-flex justify-content-between pe-3 ps-3">
                             <p><i class="fas fa-martini-glass fs-3"></i> {{ cocktail.difficulty }}</p>
-                            <small class=""><i class="fas fa-user-pen fs-1"></i> By <a href="/user/{{ cocktail.user.username }}/cocktails" class="text-warning fw-semibold">{{ cocktail.user.firstname[0] }}. {{ cocktail.user.lastname }}</a></small>
+                            <small class=""><i class="fas fa-user-pen fs-1"></i> By <a href="/user/{{ cocktail.user.username }}/cocktails" class="text-warning fw-semibold">{{ cocktail.user.firstname }} {{ cocktail.user.lastname }}</a></small>
                         </div>
                         <div class="d-flex justify-content-between align-items-start pe-3 ps-3">
                             <p class="d-flex align-items-center mt-1">

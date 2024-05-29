@@ -36,7 +36,7 @@
                                 {% endfor %}
                                 <span class="ms-1 fs-3">{{ cocktail.count_ratings() }} ratings</span>
                             </p>
-                            <span class=""><i class="fas fa-user-pen fs-1"></i> By <a href="/user/{{ cocktail.user.username }}/cocktails" class="text-warning fw-semibold">{{ cocktail.user.firstname[0] }}. {{ cocktail.user.lastname }}</a></span>
+                            <span class=""><i class="fas fa-user-pen fs-1"></i> By <a href="/user/{{ cocktail.user.username }}/cocktails" class="text-warning fw-semibold">{{ cocktail.user.firstname}} {{ cocktail.user.lastname }}</a></span>
                         </div>
                     </div>
                     <hr>
