@@ -5,6 +5,7 @@ from database import db
 from werkzeug.utils import secure_filename
 import os
 from sqlalchemy import and_,or_ ,cast, String, func
+from sqlalchemy.orm import contains_eager
 
 UPLOAD_FOLDER = 'static/images/users_avatar'
 UPLOAD_RECIPE_FOLDER = 'static/images/recipes_images'
@@ -123,7 +124,10 @@ def cocktails():
 @cocktail_blueprint.route('/cocktail/<int:cocktail_id>')
 def details_cocktail(cocktail_id):
     cocktail = Recipe.query.filter_by(id=cocktail_id).first()
-    user_rating = Rating.query.filter_by(user_id=current_user.id, recipe_id=cocktail_id).first()
+    if current_user.is_authenticated:
+        user_rating = Rating.query.filter_by(user_id=current_user.id, recipe_id=cocktail_id).first()
+    else:
+        user_rating = 0
     return render_template('details.html', title="Cocktail Details", cocktail = cocktail, user_rating=user_rating)
 
 @cocktail_blueprint.route('/new_cocktail', methods=['POST'])
@@ -244,16 +248,16 @@ def search_cocktail():
 def async_search_cocktail():
     search_query = request.form.get('async_search_query', '')
 
-    cocktails = Recipe.query.filter(
+    cocktails = Recipe.query.join(Recipe.recipe_ingredients).join(RecipeIngredient.ingredient).filter(
         and_(
             Recipe.valid == True,
             or_(
                 Recipe.title.ilike(f'%{search_query}%'),
                 cast(Recipe.difficulty, String).ilike(f'%{search_query}%'),
-                Recipe.recipe_ingredients.any(RecipeIngredient.ingredient.has(name=search_query))
+                Ingredient.name.ilike(f'%{search_query}%')
             )
         )
-    ).all()
+    ).options(contains_eager(Recipe.recipe_ingredients)).all()
 
     return render_template('async_result.html', cocktails=cocktails)
 
