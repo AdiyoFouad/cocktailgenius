@@ -21,4 +21,5 @@ ENV FLASK_RUN_HOST=0.0.0.0
 ENV PORT=5000
 
 # Lancer l'application avec Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
+# CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
+CMD ["sh", "-c", "python init_db.py && gunicorn --bind 0.0.0.0:5000 app:app"]
