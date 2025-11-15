@@ -59,7 +59,7 @@ def new_user():
         db.session.add(n_user)
         db.session.commit()
         flash("Your account has been successfully created", 'success')
-        return render_template(url_for('/user_login'), title = "Login")
+        return render_template('login.html', title = "Login")
 
 
 @user_blueprint.route('/user_login', methods=['POST', 'GET'])

@@ -10,7 +10,7 @@
         <h3 class="mt-4">Edit your profile</h3>
         <form action="/update_profil_image" method="post"  class="w-75 m-auto" enctype="multipart/form-data">     
             
-            <img class="offset-2 mb-2" src="{{url_for('static', filename=current_user.profile_image) }}" id="profile_avatar" alt="User Avatar">
+            <img class="offset-2 mb-2" src="{% if current_user.profile_image %}{{ url_for('static', filename=current_user.profile_image) }}{% else %}{{ url_for('static', filename='images/users_avatar/default_avatar.png') }}{% endif %}" id="profile_avatar" alt="User Avatar">
             <div class="input-group">
                 <label for="avatar" class="fw-semibold  col-2">Avatar</label>
                 <input type="file" class="form-control rounded-2" name="avatar" required accept="image/*">
